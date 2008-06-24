@@ -17,7 +17,7 @@
     var childPages = wikiPage.getChildPages(wikiPage);
     if( childPages.length ) {
 %>
-    <b>Child Articles</b>
+    <h3>Child Articles</h3>
     <ul>
     <%
         childPages.forEach(core.app.wiki.pieces.html.childpagelist);
