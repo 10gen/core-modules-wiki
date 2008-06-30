@@ -45,3 +45,12 @@ assert(m[2] == "http://manuals.rubyonrails.com");
 assert(m[3] == "rails");
 assert(m[4] == " here");
 
+s = "this is %some code%";
+o = w.toHtml(s);
+assert(o == "this is <code>some code</code>\n");
+
+
+s = "this is 100% pure code";
+o = w.toHtml(s);
+assert(o == "this is 100% pure code\n");
+
