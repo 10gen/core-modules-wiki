@@ -1,10 +1,10 @@
 /* translate wiki markup to html 
    see http://www.10gen.com/wiki/wiki.markup
 
-   todo: move this file to /app/wiki/ folder?
+   todo: move this file to /Wiki/ folder?
 
    options:
-     set app.wiki.programmer=false to disable "programmer" extensions to the wiki; for example the 
+     set Wiki.programmer=false to disable "programmer" extensions to the wiki; for example the 
        programmer extensions auto-link "core.module();" statements in the wiki.
 */
 
@@ -373,7 +373,7 @@ content.WikiParser.prototype._line = function(str) {
     // raw urls - disabled, see above
     str = content.WikiParser._repl(this.urls, str);
 
-    if( str.match(/core/) && app.wiki && (app.wiki.programmer==null || !app.wiki.programmer) ) {
+    if( str.match(/core/) && Wiki && (Wiki.programmer==null || !Wiki.programmer) ) {
 	var old = str;
 	str = content.WikiParser._repl(this.d.programmer, str);
     }

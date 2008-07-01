@@ -26,7 +26,7 @@
 <%}%>
 </div>
 
-<% if (!app.wiki.config.readOnly) { %>
+<% if (!Wiki.config.readOnly) { %>
     <div class="popup" id="rename_popup" style="display: none;">
         <div class="hd">Confirm Page Rename</div>
         <div class="bd">
@@ -42,7 +42,7 @@
 <% } %>
 </div>
 
-<% if (!app.wiki.config.readOnly) { %>
+<% if (!Wiki.config.readOnly) { %>
 <form method="POST" enctype="multipart/form-data" >
    <input type="hidden" name="MAX_FILE_SIZE" value="<%= 1024 * 1024 * 100 %>" />
    Choose a file to upload: <input name="theFile" type="file" />

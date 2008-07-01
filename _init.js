@@ -1,5 +1,5 @@
-log.app.wiki.info("Running wiki._init");
-app.wiki = Object();
+log.Wiki.info("Running wiki._init");
+Wiki = Object();
 
 core.core.routes();
 
@@ -20,13 +20,13 @@ if (!(allowModule && allowModule.wiki)) {
     return;
 }
 
-app.wiki.config = allowModule.wiki;
-app.wiki.config.prefix = app.wiki.config.prefix || "";
+Wiki.config = allowModule.wiki;
+Wiki.config.prefix = Wiki.config.prefix || "";
 
 
-app.wiki.routes = new Routes();
-app.wiki.routes.search = "/~~/modules/wiki/search";
-app.wiki.routes.rss = "/~~/modules/wiki/rss";
-app.wiki.routes.add( /assets\/.*\.(js|css|jpg|gif|jpeg|png|ico)$/ , "/~~/modules/wiki/$0" );
-app.wiki.routes.add( /\/?(.*)/ , "/~~/app/wiki" , { names : [ "name" ] } );
+Wiki.routes = new Routes();
+Wiki.routes.search = "/~~/modules/wiki/search";
+Wiki.routes.rss = "/~~/modules/wiki/rss";
+Wiki.routes.add( /assets\/.*\.(js|css|jpg|gif|jpeg|png|ico)$/ , "/~~/modules/wiki/$0" );
+Wiki.routes.add( /\/?(.*)/ , "/~~/Wiki" , { names : [ "name" ] } );
 

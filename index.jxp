@@ -2,7 +2,7 @@
     core.util.string();
 
     assert( app );
-    assert( app.wiki );
+    assert( Wiki );
 
     var uri = request.getURI();
 
@@ -32,8 +32,8 @@
     // Construct the full name of the page if we have a prefix defined for this instance
     var name = displayName;
 
-    if ( app.wiki.config.prefix && ! displayName.match( "^" + app.wiki.config.prefix ) )
-        name = app.wiki.config.prefix + displayName;
+    if ( Wiki.config.prefix && ! displayName.match( "^" + Wiki.config.prefix ) )
+        name = Wiki.config.prefix + displayName;
 
     // Get the actual wiki page. If there is no page with the given name, create a new page
     var wikiPage = db.wiki.findOne( { name : name } );
@@ -43,8 +43,8 @@ if( !wikiPage && name && name.length ) {
     var w = db.wiki.findOne( { name: RegExp("^" + name + "$", "i") } );
     if( w ) {
 	var nm = w.name;
-	if( app.wiki.config.prefix ) {
-	    nm = nm.lessPrefix(app.wiki.config.prefix);
+	if( Wiki.config.prefix ) {
+	    nm = nm.lessPrefix(Wiki.config.prefix);
 	}
         response.setResponseCode( 302 );
         response.setHeader( "Location" , base + nm );
@@ -52,7 +52,7 @@ if( !wikiPage && name && name.length ) {
     }
 } 
 
-    if (!wikiPage) wikiPage = new app.wiki.WikiPage(name);
+    if (!wikiPage) wikiPage = new Wiki.WikiPage(name);
 
 if( request.pdf ) { 
     core.modules.wiki.pdf();
@@ -64,20 +64,20 @@ if( request.pdf ) {
     if (request.version) {
         wikiPageHistoricalVersion = wikiPage.getWikiPageHistory(request.version);
         if(! wikiPageHistoricalVersion){
-            log.app.wiki.error("Got a request for historical version " + request.version + " but was unable to find it in the database.");
+            log.Wiki.error("Got a request for historical version " + request.version + " but was unable to find it in the database.");
         }
         if (request.diff == "true") {
             wikiPageShowDiff = true;
         }
     }
 
-    if ( ! app.wiki.config.readOnly ){
+    if ( ! Wiki.config.readOnly ){
         var theFile = request.getFile( "theFile" );
         if (request['rename'] ) {
-            app.wiki.WikiController.renamePage(wikiPage, request.newName);
+            Wiki.WikiController.renamePage(wikiPage, request.newName);
         }
         else if ( request['delete']  ) {
-            app.wiki.WikiController.deletePage(wikiPage);
+            Wiki.WikiController.deletePage(wikiPage);
         }
         else if (request['update'] ) {
             log(tojson(request));

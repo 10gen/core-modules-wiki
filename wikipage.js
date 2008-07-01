@@ -1,33 +1,33 @@
-log.app.wiki.info("Running wikipage.js.");
+log.Wiki.info("Running wikipage.js.");
 
-app.wiki.WikiPage = function(name) {
+Wiki.WikiPage = function(name) {
     this.name = name || '';
     this.text = 'New WikiPage';
     this.lastEdit = new Date();
     this.files = [];
 };
 
-log.app.wiki.info("db: " + db);
+log.Wiki.info("db: " + db);
 
 if (db) {
     db.wiki.ensureIndex( { name : 1 } );
     db.wiki.ensureIndex( { lastEdit : 1 } );
 
-    db.wiki.setConstructor( app.wiki.WikiPage );
+    db.wiki.setConstructor( Wiki.WikiPage );
 }
 
 /**
  * returns an array with the page name components split into an array
  */
-app.wiki.WikiPage.prototype.getStructuredName = function() {
+Wiki.WikiPage.prototype.getStructuredName = function() {
     return this.getDisplayName().split(/[.]/);
 };
 
-app.wiki.WikiPage.prototype.getDisplayName = function() {
-    return this.name.replace(new RegExp('^' + app.wiki.config.prefix), '');
+Wiki.WikiPage.prototype.getDisplayName = function() {
+    return this.name.replace(new RegExp('^' + Wiki.config.prefix), '');
 };
 
-app.wiki.WikiPage.prototype.getParsedText = function(device, result) {
+Wiki.WikiPage.prototype.getParsedText = function(device, result) {
     if ( ! this.text )
         return "";
     if ( this.text.trim().length == 0 )
@@ -36,8 +36,8 @@ app.wiki.WikiPage.prototype.getParsedText = function(device, result) {
     return this.formatText(this.text, device, result);
 };
 
-app.wiki.WikiPage.prototype.formatText = function(text, device, result){
-    var s = (new app.wiki.WikiController.TEXT_PARSER(device, result)).toHtml(text, app.wiki.config.prefix, this.name);//.trim();
+Wiki.WikiPage.prototype.formatText = function(text, device, result){
+    var s = (new Wiki.WikiController.TEXT_PARSER(device, result)).toHtml(text, Wiki.config.prefix, this.name);//.trim();
     if ( s.length == 0 )
         throw "parser broken?";
 
@@ -48,14 +48,14 @@ app.wiki.WikiPage.prototype.formatText = function(text, device, result){
  * Updates the text of a saved WikiPage with the new text. The new text is expected to be in a markup language.
  * @returns true if page was properly saved with history, false if newText was empty or wiki is read only.
  */
-app.wiki.WikiPage.prototype.setText = function(newText) {
+Wiki.WikiPage.prototype.setText = function(newText) {
     if (!newText || newText.length == 0) return false;
-    if (app.wiki.config && app.wiki.config.readOnly) return false;
+    if (Wiki.config && Wiki.config.readOnly) return false;
 
     // get a diff of the text of the Wiki, and save it in a WikiHistory object.
     var textDiff = Util.Diff.diff(this.text, newText);
 
-    var wikiPageHistory = new app.wiki.WikiPageHistory(this._id, textDiff, user);
+    var wikiPageHistory = new Wiki.WikiPageHistory(this._id, textDiff, user);
 
     // change the wikiPage text now, after we have an historical log.
     this.text = newText;
@@ -73,12 +73,12 @@ app.wiki.WikiPage.prototype.setText = function(newText) {
  * Gets the list of all WikiPageHistory objects for the current page
  * @returns null if no history is found
  */
-app.wiki.WikiPage.prototype.getWikiPageHistories = function() {
+Wiki.WikiPage.prototype.getWikiPageHistories = function() {
     // get the WikiPageHistory objects for the current page
     return db.wiki_history.find( { parent: this._id } ).sort( { ts: -1 } );
 };
 
-app.wiki.WikiPage.prototype.getLastEdit = function(){
+Wiki.WikiPage.prototype.getLastEdit = function(){
     var cursor = this.getWikiPageHistories();
     if ( ! cursor.hasNext() )
         return null;
@@ -89,20 +89,20 @@ app.wiki.WikiPage.prototype.getLastEdit = function(){
  * Gets the WikiPageHistory object identified by the given id
  * @returns null if no history is found
  */
-app.wiki.WikiPage.prototype.getWikiPageHistory = function(wikiPageHistoryId) {
+Wiki.WikiPage.prototype.getWikiPageHistory = function(wikiPageHistoryId) {
     // get the WikiPageHistory objects for the current page
     return db.wiki_history.findOne( { parent: this._id, _id: wikiPageHistoryId } );
 }
 
-app.wiki.WikiPage.prototype.getChildPages = function() {
+Wiki.WikiPage.prototype.getChildPages = function() {
     var pageNameRegularExpression = /^[^.]+$/;
-    if (this.name != app.wiki.config.prefix + "Main") pageNameRegularExpression = RegExp("^" + this.name + "\.[^.]+$");
-    else if (app.wiki.config.prefix) pageNameRegularExpression = RegExp("^" + app.wiki.config.prefix + "\.[^.]+$");
+    if (this.name != Wiki.config.prefix + "Main") pageNameRegularExpression = RegExp("^" + this.name + "\.[^.]+$");
+    else if (Wiki.config.prefix) pageNameRegularExpression = RegExp("^" + Wiki.config.prefix + "\.[^.]+$");
 
     var childPages = db.wiki.find( { name: pageNameRegularExpression } ).sort( { name: 1 } ).toArray();
 
     childPages.forEach( function(childPage) {
-        childPage.name = childPage.name.replace(new RegExp('^' + app.wiki.config.prefix), '');
+        childPage.name = childPage.name.replace(new RegExp('^' + Wiki.config.prefix), '');
     });
 
     return childPages;

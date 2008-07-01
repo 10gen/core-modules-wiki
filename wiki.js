@@ -1,15 +1,15 @@
 
-app.wiki.WikiController = function() {};
+Wiki.WikiController = function() {};
 
-app.wiki.WikiController.TEXT_PARSER = content.WikiParser;
+Wiki.WikiController.TEXT_PARSER = content.WikiParser;
 
-app.wiki.WikiController.renamePage = function(wikiPage, newPageName) {
+Wiki.WikiController.renamePage = function(wikiPage, newPageName) {
     // ensure we have a page
     if (!wikiPage) return false;
-    if (app.wiki.config.readOnly) return false;
+    if (Wiki.config.readOnly) return false;
 
     // ensure our newPageName is valid
-    if (!app.wiki.WikiController.validatePageName(newPageName)) return false;
+    if (!Wiki.WikiController.validatePageName(newPageName)) return false;
 
     // ensure we don't have a page with the new name already
     if (db.wiki.findOne( { name: newPageName } )) {
@@ -23,7 +23,7 @@ app.wiki.WikiController.renamePage = function(wikiPage, newPageName) {
     }
 };
 
-app.wiki.WikiController.validatePageName = function(pageName) {
+Wiki.WikiController.validatePageName = function(pageName) {
     // pageName can't be null or empty
     if (!pageName) return false;
 
@@ -36,10 +36,10 @@ app.wiki.WikiController.validatePageName = function(pageName) {
     else return true;
 };
 
-app.wiki.WikiController.deletePage = function(wikiPage) {
+Wiki.WikiController.deletePage = function(wikiPage) {
     SYSOUT('in delete');
     if (!wikiPage) return false;
-    if (app.wiki.config.readOnly) return false;
+    if (Wiki.config.readOnly) return false;
 
     // ensure we're not trying to delete the Main page
     if (wikiPage.name == 'Main') {
@@ -59,7 +59,7 @@ app.wiki.WikiController.deletePage = function(wikiPage) {
     response.setHeader("Location", wikiPage.name);
 };
 
-app.wiki.WikiController.getCookieCrumb = function(wikiPage) {
+Wiki.WikiController.getCookieCrumb = function(wikiPage) {
     if (!wikiPage) return '';
 
     var cookieCrumb = '';

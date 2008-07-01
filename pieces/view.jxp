@@ -1,7 +1,7 @@
 <% core.modules.wiki.pieces.header_wikipage(); %>
 
 
-<% if( app.wiki.navpane ) { %>
+<% if( Wiki.navpane ) { %>
 
 <div>
 </div>
