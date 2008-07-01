@@ -1,7 +1,6 @@
 <%
     core.util.string();
 
-    assert( app );
     assert( Wiki );
 
     var uri = request.getURI();
