@@ -55,7 +55,7 @@ if( !wikiPage && name && name.length ) {
     if (!wikiPage) wikiPage = new app.wiki.WikiPage(name);
 
 if( request.pdf ) { 
-    core.app.wiki.pdf();
+    core.modules.wiki.pdf();
     return;
 }
 
@@ -92,11 +92,11 @@ if( request.pdf ) {
     }
 
     if ( request.edit )
-            core.app.wiki.pieces.edit();
+            core.modules.wiki.pieces.edit();
     else if ( request.history )
-            core.app.wiki.pieces.history();
+            core.modules.wiki.pieces.history();
     else if ( request.compare )
-        core.app.wiki.pieces.compare();
+        core.modules.wiki.pieces.compare();
     else
-        core.app.wiki.pieces.view();
+        core.modules.wiki.pieces.view();
 %>

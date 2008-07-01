@@ -1,4 +1,4 @@
-<% core.app.wiki.pieces.header_wikipage(); %>
+<% core.modules.wiki.pieces.header_wikipage(); %>
 
 <form>
 <ul id="wiki_history" class="content">
@@ -15,5 +15,5 @@
 </ul>
 <input type="submit">
 </form>
-<% core.app.wiki.pieces.footer_wikipage(); %>
+<% core.modules.wiki.pieces.footer_wikipage(); %>
 

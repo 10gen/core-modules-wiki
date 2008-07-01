@@ -3,16 +3,16 @@ app.wiki = Object();
 
 core.core.routes();
 
-core.app.wiki.wikiparser();
+core.modules.wiki.wikiparser();
 core.content.htmlhelper();
 
 core.html.html();
 
 core.util.diff();
 
-core.app.wiki.wiki();
-core.app.wiki.wikipage();
-core.app.wiki.wikipagehistory();
+core.modules.wiki.wiki();
+core.modules.wiki.wikipage();
+core.modules.wiki.wikipagehistory();
 
 
 if (!(allowModule && allowModule.wiki)) {
