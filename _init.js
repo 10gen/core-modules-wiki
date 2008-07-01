@@ -28,5 +28,5 @@ Wiki.routes = new Routes();
 Wiki.routes.search = "/~~/modules/wiki/search";
 Wiki.routes.rss = "/~~/modules/wiki/rss";
 Wiki.routes.add( /assets\/.*\.(js|css|jpg|gif|jpeg|png|ico)$/ , "/~~/modules/wiki/$0" );
-Wiki.routes.add( /\/?(.*)/ , "/~~/Wiki" , { names : [ "name" ] } );
+Wiki.routes.add( /\/?(.*)/ , "/~~/modules/wiki" , { names : [ "name" ] } );
 
