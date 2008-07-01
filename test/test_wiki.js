@@ -1,4 +1,4 @@
-core.app.wiki.wikiparser();
+core.modules.wiki.wikiparser();
 
 // Test that the wiki parser doesn't eat spaces.
 

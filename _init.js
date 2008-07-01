@@ -3,16 +3,16 @@ app.wiki = Object();
 
 core.core.routes();
 
-core.app.wiki.wikiparser();
+core.modules.wiki.wikiparser();
 core.content.htmlhelper();
 
 core.html.html();
 
 core.util.diff();
 
-core.app.wiki.wiki();
-core.app.wiki.wikipage();
-core.app.wiki.wikipagehistory();
+core.modules.wiki.wiki();
+core.modules.wiki.wikipage();
+core.modules.wiki.wikipagehistory();
 
 
 if (!(allowModule && allowModule.wiki)) {
@@ -25,8 +25,8 @@ app.wiki.config.prefix = app.wiki.config.prefix || "";
 
 
 app.wiki.routes = new Routes();
-app.wiki.routes.search = "/~~/app/wiki/search";
-app.wiki.routes.rss = "/~~/app/wiki/rss";
-app.wiki.routes.add( /assets\/.*\.(js|css|jpg|gif|jpeg|png|ico)$/ , "/~~/app/wiki/$0" );
+app.wiki.routes.search = "/~~/modules/wiki/search";
+app.wiki.routes.rss = "/~~/modules/wiki/rss";
+app.wiki.routes.add( /assets\/.*\.(js|css|jpg|gif|jpeg|png|ico)$/ , "/~~/modules/wiki/$0" );
 app.wiki.routes.add( /\/?(.*)/ , "/~~/app/wiki" , { names : [ "name" ] } );
 

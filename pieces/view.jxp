@@ -1,4 +1,4 @@
-<% core.app.wiki.pieces.header_wikipage(); %>
+<% core.modules.wiki.pieces.header_wikipage(); %>
 
 
 <% if( app.wiki.navpane ) { %>
@@ -33,4 +33,4 @@
       <% } %>
 </ul>
 
-<% core.app.wiki.pieces.footer_wikipage(); %>
+<% core.modules.wiki.pieces.footer_wikipage(); %>

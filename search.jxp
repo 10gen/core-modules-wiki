@@ -1,4 +1,4 @@
-<% core.app.wiki.pieces.header_search(); %>
+<% core.modules.wiki.pieces.header_search(); %>
 
 <%
 if( !allowModule.wiki ) return;
@@ -33,4 +33,4 @@ if( prefixRE ) searchTable.filter = function(x) { return x.name.match(prefixRE);
 
 <% searchTable.dbview( searchTable.find().sort({name:1}) ); %>
 
-<% core.app.wiki.pieces.footer_search(); %>
+<% core.modules.wiki.pieces.footer_search(); %>

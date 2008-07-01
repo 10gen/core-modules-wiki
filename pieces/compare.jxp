@@ -1,7 +1,7 @@
-<% core.app.wiki.pieces.header_wikipage(); %>
+<% core.modules.wiki.pieces.header_wikipage(); %>
 
 <%
-    core.app.wiki.wikipagehistory();
+    core.modules.wiki.wikipagehistory();
 var versions = request.getParameters('compare');
 assert(versions.length == 2);
 versions = versions.map(function(id){ return db.wiki_history.findOne({_id: id}); });
@@ -13,4 +13,4 @@ var textDiff = Util.Diff.diff(oldversion.getHistoricalText(), newversion.getHist
 <%= textDiff %>
 </pre>
 
-<% core.app.wiki.pieces.footer_wikipage(); %>
+<% core.modules.wiki.pieces.footer_wikipage(); %>

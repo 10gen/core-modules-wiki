@@ -20,7 +20,7 @@
     <h3>Child Articles</h3>
     <ul>
     <%
-        childPages.forEach(core.app.wiki.pieces.html.childpagelist);
+        childPages.forEach(core.modules.wiki.pieces.html.childpagelist);
     %>
     </ul>
 <%}%>
