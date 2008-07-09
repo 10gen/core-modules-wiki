@@ -49,11 +49,11 @@ if( !wikiPage && name && name.length ) {
         response.setHeader( "Location" , base + nm );
         return;
     }
-} 
+}
 
     if (!wikiPage) wikiPage = new Wiki.WikiPage(name);
 
-if( request.pdf ) { 
+if( request.pdf ) {
     core.modules.wiki.pdf();
     return;
 }
@@ -70,7 +70,7 @@ if( request.pdf ) {
         }
     }
 
-    if ( ! Wiki.config.readOnly ){
+if ( ! Wiki.config.readOnly && (request['action'] && request['action'] != "Cancel")){
         var theFile = request.getFile( "theFile" );
         if (request['rename'] ) {
             Wiki.WikiController.renamePage(wikiPage, request.newName);
