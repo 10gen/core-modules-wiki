@@ -83,7 +83,18 @@ pre {
 	padding: 0;
 }
 
+ul .column-one-third li {
+  background-image: url(/assets/list_bullet_orange.gif);
+}
+
+
 /* Layout */
+
+.column-one-third {
+	width: 234px;
+	float: left;
+	padding-right: 10px;
+}
 
 /*
 
