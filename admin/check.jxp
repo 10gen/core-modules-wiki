@@ -1,0 +1,22 @@
+<h1>Check Reachability</h1>
+<p>
+<form action="check" method="get" accept-charset="utf-8">
+    <input type="text" name="root" value="" id="root">
+    <p><input type="submit" value="Check"></p>
+</form>
+</p>
+<% if (request.root) {%>
+<h2>
+    Pages unreachable from <%= request.root %>
+</h2>
+<%= Wiki.config.prefix %>
+
+<ul>
+    <% a = Wiki.getUnreachables(request.root); %>
+    <% for (i = 0; i < a.length; i++) { %>
+        <li>
+            <a href='<%= Wiki.config.prefix+"/wiki/"+a[i].name %>'><%= a[i].name %></a>
+        </li>
+    <% } %>
+</ul>
+<%}%>
