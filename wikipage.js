@@ -108,3 +108,48 @@ Wiki.WikiPage.prototype.getChildPages = function() {
     return childPages;
 };
 
+Wiki.WikiPage.prototype.getLinkedPages = function() {
+    a = new Array();
+    var tempA;
+    strings = this.text.split("\n");
+    
+    for (n in strings) {
+        s = strings[n];
+        while ((tempA = /\[\[([^|\[]+)\|[^\[]+\]\]/g.exec(s)) != null) // [[link|pretty text]]
+            a.push(tempA[1]);
+
+        while ((tempA = /\[\[([^|\[]+)\]\]/g.exec(s)) != null) // [[link]]
+            a.push(tempA[1]);
+
+    	// forward chapter links [[fwd}}
+    	// pdf mode uses these to chain together pages
+        // \\? is because of tex pre-escaping brace
+        while ((tempA = /\[\[(.+?)\|.+?\\?\}\\?\}/g.exec(s)) != null) // [[link|pretty text}}
+            a.push(tempA[1]);
+    
+        while ((tempA = /\[\[([^|]+?)\\?\}\\?\}/g.exec(s)) != null) // [[link}}
+            a.push(tempA[1]);
+    
+    	// backward chapter links [[fwd}}
+    	// pdf mode doesn't display as it assumes everything is stiched together
+    	while ((tempA = /\\?\{\\?\{([^|\[]+)\|[^\[]+\]\]/g.exec(s)) != null) // [[link|pretty text}}
+    	    a.push(tempA[1]);
+    
+    	while ((tempA = /\\?\{\\?\{([^|\[]+)\]\]/g.exec(s)) != null) // [[link}}
+    	    a.push(tempA[1]);
+    }
+    
+    if (a.length == 0) {
+        return null;
+    }
+    
+    re = "^"
+    for (i in a) {
+        re += a[i].replace(/\/wiki\//, "").trim();
+        if (i < a.length - 1)
+            re += "$|^"
+    }
+    re += "$"
+    return db.wiki.find({name: new RegExp(re, "i")});
+};
+
