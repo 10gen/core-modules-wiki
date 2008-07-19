@@ -11,7 +11,7 @@ var markHelper = function(currentPage, marked) {
         return marked;
     }
     marked[currentPage.name] = true;
-    linked = currentPage.getLinkedPages();
+    var linked = currentPage.getLinkedPages();
     if (linked) {
         linked.forEach(function(link) {
             markHelper(link, marked);
@@ -21,19 +21,25 @@ var markHelper = function(currentPage, marked) {
 };
 
 var mark = function(rootName) {
-    root = db.wiki.findOne({name: rootName});
-    marked = {};
+    var root = db.wiki.findOne( { name: new RegExp( "^" + rootName + "$" , "i" ) });
+    var marked = {};
     if (root)
         markHelper(root, marked);
     return marked;
 };
 
 Wiki.getUnreachables = function(rootName) {
-    marked = mark(rootName);
+    var marked = mark(rootName);
+    var names = marked.keySet().map( 
+        function(z){ 
+            return z.toLowerCase();
+        }
+    );
+    
     swept = new Array();
     all = db.wiki.find().forEach(
         function(u) {
-            if (!marked[u.name]) {
+            if ( ! names.contains( u.name.toLowerCase() ) ){
                 swept.push(u);
             }
         });

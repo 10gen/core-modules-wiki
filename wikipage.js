@@ -109,9 +109,9 @@ Wiki.WikiPage.prototype.getChildPages = function() {
 };
 
 Wiki.WikiPage.prototype.getLinkedPages = function() {
-    a = new Array();
+    var a = new Array();
     var tempA;
-    strings = this.text.split("\n");
+    var strings = this.text.split("\n");
     
     for (n in strings) {
         s = strings[n];
@@ -145,7 +145,12 @@ Wiki.WikiPage.prototype.getLinkedPages = function() {
     
     re = "^"
     for (i in a) {
-        re += a[i].replace(/\/wiki\//, "").trim();
+        var temp = a[i].replace(/\/wiki\//, "").trim();
+        if ( allowModule && allowModule.wiki && allowModule.wiki.prefix ){
+            if ( ! temp.startsWith( allowModule.wiki.prefix ) )
+                temp = allowModule.wiki.prefix + temp;
+        }
+        re += temp;
         if (i < a.length - 1)
             re += "$|^"
     }

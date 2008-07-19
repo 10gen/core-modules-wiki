@@ -1,7 +1,9 @@
 <h1>Check Reachability</h1>
 <p>
+<% print.setFormObject( request ); %>
 <form action="check" method="get" accept-charset="utf-8">
-    <input type="text" name="root" value="" id="root">
+    <input type="text" name="root" id="root"><br>
+    <input type="text" name="filter" id="root">(optional-substring)<br>
     <p><input type="submit" value="Check"></p>
 </form>
 </p>
@@ -12,7 +14,11 @@
 <%= Wiki.config.prefix %>
 
 <ul>
-    <% a = Wiki.getUnreachables(request.root); %>
+    <% a = Wiki.getUnreachables(request.root); 
+       if ( request.filter ){
+           a = a.filter( function(z){ return z.name.indexOf( request.filter ) >= 0; } );
+       } 
+       %>
     <% for (i = 0; i < a.length; i++) { %>
         <li>
             <a href='<%= Wiki.config.prefix+"/wiki/"+a[i].name %>'><%= a[i].name %></a>
