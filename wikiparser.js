@@ -319,17 +319,25 @@ content.WikiParser.prototype._line = function(str) {
 	}
 	return;
     }
-
+    
     if( trimmed == "</nowiki>" ) { this.noWiki = 0; return; }
     if( trimmed == "</nohtml>" ) { this.noHtml = 0; return; }
     if( trimmed == "</prenh>" ) { this.noWiki = 0; this.noHtml=0; this.outp+=this.d._pre; this.preMode = 0; return; }
     if( trimmed == "</pre>" ) { this.outp+=this.d._pre; this.preMode = 0; return; }
+    if( trimmed == "</js>" ){ this.outp += scope.eval( this._js ); this._js = null; this.js=0; return; }
     if( trimmed == "<prenh>" ) {
         this._reLevel(newLevel); this.noWiki=1; this.noHtml=1; this.outp += this.d.pre; this.preMode = 1; return;
     }
     if( trimmed == "<pre>" ) { this._reLevel(newLevel); this.outp += this.d.pre; this.preMode = 1; return; }
     if( trimmed == "<nowiki>" ) { this.noWiki++; return; }
     if( trimmed == "<nohtml>" ) { this.noHtml++; return; }
+    if( trimmed == "<js>" ) { this.js++; return; }
+
+    if ( this.js ){
+        this._js = this._js || "";
+        this._js += "\n" + str;
+        return;
+    }
 
     if( this.preMode && this.d != this.htmldevice ) { 
 	this.outp += str + '\n'; 
@@ -410,6 +418,7 @@ content.WikiParser.prototype._reset = function() {
     this.noHtml = 0;
     this.preMode = 0;
     this.level = 0;
+    this.js = 0;
 };
 
 content.WikiParser.prototype.toHtml = function(str, prefix, title) {
