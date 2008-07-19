@@ -21,7 +21,7 @@
        %>
     <% for (i = 0; i < a.length; i++) { %>
         <li>
-            <a href='<%= Wiki.config.prefix+"/wiki/"+a[i].name %>'><%= a[i].name %></a>
+            <a href='<%= "/wiki/"+a[i].name %>'><%= a[i].name %></a>
         </li>
     <% } %>
 </ul>
