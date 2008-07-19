@@ -324,7 +324,17 @@ content.WikiParser.prototype._line = function(str) {
     if( trimmed == "</nohtml>" ) { this.noHtml = 0; return; }
     if( trimmed == "</prenh>" ) { this.noWiki = 0; this.noHtml=0; this.outp+=this.d._pre; this.preMode = 0; return; }
     if( trimmed == "</pre>" ) { this.outp+=this.d._pre; this.preMode = 0; return; }
-    if( trimmed == "</js>" ){ this.outp += scope.eval( this._js ); this._js = null; this.js=0; return; }
+    if( trimmed == "</js>" ){ 
+        if ( Wiki.config.jsAllowed ){
+            this.outp += scope.eval( this._js ); 
+        }
+        else {
+            this.outp += "javascript not allowed";
+        }
+        this._js = null; 
+        this.js=0; 
+        return; 
+    }
     if( trimmed == "<prenh>" ) {
         this._reLevel(newLevel); this.noWiki=1; this.noHtml=1; this.outp += this.d.pre; this.preMode = 1; return;
     }
