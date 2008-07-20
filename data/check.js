@@ -4,7 +4,7 @@ if(! db)
 if(! Wiki) {
     Wiki = {};
     core.modules.wiki.wikiPage();
-}
+};
 
 var markHelper = function(currentPage, marked) {
     if (marked[currentPage.name]) {
@@ -36,14 +36,33 @@ Wiki.getUnreachables = function(rootName) {
         }
     );
     
-    swept = new Array();
-    all = db.wiki.find().forEach(
+    var swept = new Array();
+    db.wiki.find().forEach(
         function(u) {
             if ( ! names.contains( u.name.toLowerCase() ) ){
                 swept.push(u);
             }
-        });
+        }
+    );
     return swept;
-}
+};
 
-//print(tojson(Wiki.getUnreachables("Main")));
+Wiki.getDeadLinks = function() {
+    var dlList = {};
+    db.wiki.find().forEach(
+        function(p) {
+            var deadLinks = new Array();
+            var allLinks = p.getInternalLinkNames();
+            for (i in allLinks) {
+                if ( ! db.wiki.findOne( { name: new RegExp( "^" + allLinks[i] + "$", "i" ) })) {
+                    deadLinks.push(allLinks[i]);
+                }
+            }
+            if (deadLinks.length)
+                dlList[p.name] = deadLinks;
+        }
+    );
+    return dlList;
+};
+
+print(tojson(Wiki.getDeadLinks()));

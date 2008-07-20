@@ -108,7 +108,7 @@ Wiki.WikiPage.prototype.getChildPages = function() {
     return childPages;
 };
 
-Wiki.WikiPage.prototype.getLinkedPages = function() {
+Wiki.WikiPage.prototype.getInternalLinkNames = function() {
     var a = new Array();
     var tempA;
     var strings = this.text.split("\n");
@@ -139,19 +139,30 @@ Wiki.WikiPage.prototype.getLinkedPages = function() {
     	    a.push(tempA[1]);
     }
     
+    var names = new Array();
+    
     if (a.length == 0) {
-        return null;
+        return names;
     }
     
-    re = "^"
     for (i in a) {
         var temp = a[i].replace(/\/wiki\//, "").trim();
         if ( allowModule && allowModule.wiki && allowModule.wiki.prefix ){
             if ( ! temp.startsWith( allowModule.wiki.prefix ) )
                 temp = allowModule.wiki.prefix + temp;
         }
-        re += temp;
-        if (i < a.length - 1)
+        names.push(temp);
+    }
+    return names;
+};
+
+Wiki.WikiPage.prototype.getLinkedPages = function() {
+    var names = this.getInternalLinkNames();
+    
+    var re = "^";
+    for (i in names) {
+        re += names[i];
+        if (i < names.length - 1)
             re += "$|^"
     }
     re += "$"

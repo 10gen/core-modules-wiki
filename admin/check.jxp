@@ -7,22 +7,51 @@
     <p><input type="submit" value="Check"></p>
 </form>
 </p>
-<% if (request.root) {%>
-<h2>
-    Pages unreachable from <%= request.root %>
-</h2>
-<%= Wiki.config.prefix %>
+<%
+if (request.root) {
+%>
+    <h2>
+        Pages unreachable from <%= request.root %>
+    </h2>
+    <%= Wiki.config.prefix %>
 
-<ul>
-    <% a = Wiki.getUnreachables(request.root); 
-       if ( request.filter ){
-           a = a.filter( function(z){ return z.name.indexOf( request.filter ) >= 0; } );
-       } 
-       %>
-    <% for (i = 0; i < a.length; i++) { %>
-        <li>
-            <a href='<%= "/wiki/"+a[i].name %>'><%= a[i].name %></a>
-        </li>
-    <% } %>
-</ul>
+    <ul>
+        <% 
+        var a = Wiki.getUnreachables(request.root); 
+        if ( request.filter ){
+            a = a.filter( function(z){ return z.name.indexOf( request.filter ) >= 0; } );
+        } 
+        %>
+        <%
+        for (var i = 0; i < a.length; i++) {
+        %>
+            <li>
+                <a href='<%= "/wiki/"+a[i].name %>'><%= a[i].name %></a>
+            </li>
+        <%}%>
+    </ul>
 <%}%>
+
+<h1>Dead Links</h1>
+<p>
+    <ul>
+        <%  
+        var dl = Wiki.getDeadLinks();
+    
+        for (var page in dl) {
+        %>
+            <li>
+                <a href='<%= "/wiki/"+page %>'><%= page %></a> links to:
+                <ul>
+                    <%
+                    for (var i in dl[page]) {
+                    %>
+                        <li>
+                            <%= dl[page][i] %>
+                        </li>
+                    <%}%>
+                </ul>
+            </li>
+        <%}%>
+    </ul>
+</p>
