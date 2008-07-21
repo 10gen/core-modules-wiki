@@ -70,7 +70,7 @@ Wiki.getDeadLinks = function() {
             var deadLinks = new Array();
             var allLinks = p.getInternalLinkNames();
             for (i in allLinks) {
-                if ( ! db.wiki.findOne( { name: new RegExp( "^" + allLinks[i] + "$", "i" ) })) {
+                if ( ! db.wiki.findOne( { name: new RegExp( "^" + RegExp.quote( allLinks[i] ) + "$", "i" ) })) {
                     deadLinks.push(allLinks[i]);
                 }
             }
@@ -81,4 +81,4 @@ Wiki.getDeadLinks = function() {
     return dlList;
 };
 
-print(tojson(Wiki.getDeadLinks()));
+
