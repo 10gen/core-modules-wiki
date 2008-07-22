@@ -32,23 +32,24 @@
 <%
     var childPages = wikiPage.getChildPages(wikiPage);
     if( childPages.length ) {
-	    var third = Math.ceil(childPages.length/3);
+        var third_ceil = Math.ceil(childPages.length/3);
+        var third = Math.floor(childPages.length/3);
 %>
     <h3>Child Articles</h3>
     <ul>
 	<div class="column-one-third">
     <%
-		childPages.slice(0, third).forEach(core.modules.wiki.pieces.html.childpagelist);
+		childPages.slice(0, third_ceil).forEach(core.modules.wiki.pieces.html.childpagelist);
 	%>
 	</div>
 	<div class="column-one-third">
     <%
-		childPages.slice(third, (2*third)).forEach(core.modules.wiki.pieces.html.childpagelist);
+       childPages.slice(third_ceil, childPages.length - third).forEach(core.modules.wiki.pieces.html.childpagelist);
     %>
     </div>
     <div class="column-one-third">
     <%
-		childPages.slice(2*third).forEach(core.modules.wiki.pieces.html.childpagelist);
+       childPages.slice(childPages.length - third).forEach(core.modules.wiki.pieces.html.childpagelist);
     %>
 	</div>
     </ul>
