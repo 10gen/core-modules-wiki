@@ -1,32 +1,29 @@
-/* translate wiki markup to html 
-   see http://www.10gen.com/wiki/wiki.markup
-
-   todo: move this file to /Wiki/ folder?
-
-   options:
-     set Wiki.programmer=false to disable "programmer" extensions to the wiki; for example the 
-       programmer extensions auto-link "core.module();" statements in the wiki.
-*/
-
+/** Translates wiki markup to html.
+ *   See http://www.10gen.com/wiki/wiki.markup <br />
+ *<br /><br />
+ *    Set Wiki.programmer=false to disable "programmer" extensions to the wiki; for example the
+ *    programmer extensions auto-link "core.module();" statements in the wiki.
+ * @class
+ */
 content.WikiParser = function(device, resultopts) {
-    this.texdevice = { 
+    this.texdevice = {
 
-	header: function(title) { 
+	header: function(title) {
 	    if( resultopts.stitching ) return '% next wiki document ' + resultopts.stitching + '\n';
 	    print("TITLE:" + title + ":\n");
-	    return "\\documentclass[12pt]{article}\n" + 
-	    "\\usepackage{graphicx}\n" + 
+	    return "\\documentclass[12pt]{article}\n" +
+	    "\\usepackage{graphicx}\n" +
 	    "\\usepackage{listings,color}\n" +
-	    "\\lstloadlanguages{Java}\n" + 
+	    "\\lstloadlanguages{Java}\n" +
     //	    "\\lstset{language=Java,showstringspaces=false,breaklines=true}\n" +
 	    "\\lstset{language=Java,showstringspaces=false,breaklines=true,basicstyle=\\ttfamily\\small}\n" +
 
-	    "\\title{" + 
+	    "\\title{" +
 	        	    (title.replace(/_/g,'\\_') || "no title") +
-	    "}\n\\date{}\n\\begin{document}\n\\maketitle\n"; 
+	    "}\n\\date{}\n\\begin{document}\n\\maketitle\n";
 	},
 
-	code: 
+	code:
 	/*function(a,b,c) {
 	    print("a:" + a + " b:" + b + " c:" + c + '\n');
 	    return "\\texttt{TEMP}";
@@ -53,7 +50,7 @@ content.WikiParser = function(device, resultopts) {
 	    return '';
 	},
 	fwd2:function(s,a){
-	    if( resultopts ) 
+	    if( resultopts )
 		resultopts.stitchopts = a;
 	    return '';
 	},
@@ -72,22 +69,22 @@ content.WikiParser = function(device, resultopts) {
 	tr: "$1",
 	_tr: function() { this.colAligns.done = true; return "\\\\\n "; },
 	td: function() { if( !this.colAligns.done ) this.colAligns.c += "l "; return " & $1"; },
-	_table: function(wikiobj) { 
+	_table: function(wikiobj) {
 	    //print("\n\n_TABLE " + this.colAligns.c + "\n\n");
 	    wikiobj.outp = wikiobj.outp.replace(/~~~~~42/, this.colAligns.c);
 	},
 
-	fileTag: function(wikiobj,fileobj) 
-	{ 
+	fileTag: function(wikiobj,fileobj)
+	{
 	    // epstopdf myfig.eps
 	    var fpath = "tmp/" + fileobj.filename;
 	    fileobj.writeToLocalFile(fpath);
 	    return '\\includegraphics[width=0.8\\textwidth]{' + fpath + '}\n';
 	},
 
-	footer: function() { 
-	    return resultopts.stitch ? '\n' : "\\end{document}\n"; 
-	}, 
+	footer: function() {
+	    return resultopts.stitch ? '\n' : "\\end{document}\n";
+	},
 
 	escape: function(s) {
 	    // html tags:
@@ -96,9 +93,9 @@ content.WikiParser = function(device, resultopts) {
 	    if( s != old ) {
 		this.colAligns.c = "l ";
 		this.colAligns.done = false;
-		// don't escape our backslashes just added. 
-		// if it turns out there might be other stuff that needs escaping on the 
-		// same line, you might want to put a special marker in now and replace them 
+		// don't escape our backslashes just added.
+		// if it turns out there might be other stuff that needs escaping on the
+		// same line, you might want to put a special marker in now and replace them
 		// at the end of this function.
 		return s;
 	    }
@@ -130,7 +127,7 @@ content.WikiParser = function(device, resultopts) {
 
     };
 
-    this.htmldevice = { 
+    this.htmldevice = {
 
 	header: function() { return ""; },
 
@@ -149,7 +146,7 @@ content.WikiParser = function(device, resultopts) {
 	_table: function(wikiobj) { },
 
 	// /~~/f?id=4852c3b3796c7a2e00fa2526&maxY=160&maxX=300
-	fileTag: function(wikiobj,fileobj) 
+	fileTag: function(wikiobj,fileobj)
 	{
 	    return '<img src="/~~/f?id=' + fileobj._id + '">';
 	},
@@ -160,15 +157,15 @@ content.WikiParser = function(device, resultopts) {
         a2:'<a href="$1">$1</a>',  // [[wikipagename]]
 
         //a3:'<a href="$1">$2</a>',  // [http://foo description]
-	a3: function(m,link,desc) { 
-	    return "<a " + 
+	a3: function(m,link,desc) {
+	    return "<a " +
 	    (link.indexOf("10gen") < 0 ? 'class="external-link" ' : '') +
 	    'href="' + link + '">' + desc + '</a>';
 	},
 
         //a4:'<a href="$1">$1</a>',  // [http://foo]
-	a4: function(m,link) { 
-	    return "<a " + 
+	a4: function(m,link) {
+	    return "<a " +
 	    (link.indexOf("10gen") < 0 ? 'class="external-link" ' : '') +
 	    'href="' + link + '">' + link + '</a>';
 	},
@@ -194,11 +191,11 @@ content.WikiParser = function(device, resultopts) {
 	escape: function(s) { return s; },
 
 	// wiki extensions helpful for development
-	// the first rule here automatically marks up a core.foo() tag to link to 
+	// the first rule here automatically marks up a core.foo() tag to link to
 	// the associated corejs.10gen.com/admin/doc page.
-	programmer : [ 
-                      { r: /^([^\[]*)core\.([a-zA-Z0-9_.]+)\(\)/g, 
-			s: function(a,b,c) { 
+	programmer : [
+                      { r: /^([^\[]*)core\.([a-zA-Z0-9_.]+)\(\)/g,
+			s: function(a,b,c) {
 			      return b + '<a href="http://corejs.10gen.com/admin/doc?f=/' +
 			      c.replace(/[.]/, "/") + '">' + "core." + c + '()</a>';
 			  }
@@ -297,24 +294,24 @@ content.WikiParser.prototype._line = function(str) {
     var trimmed = str.trim();
     var newLevel = 0;
 
-    if( trimmed.length == 0 ) { 
+    if( trimmed.length == 0 ) {
 	if( !this.lastWasHdr )
-	    this.outp += this.preMode ? '\n' : this.d.p; 
-	return; 
+	    this.outp += this.preMode ? '\n' : this.d.p;
+	return;
     }
 
     this.lastWasHdr = null;
 
     /* <file id="name"> must be on a line by itself, for now */
-    if( trimmed.startsWith("<file ") ) { 
+    if( trimmed.startsWith("<file ") ) {
 	var m = trimmed.match(/name="(.*)"/);
-	if( m && m.length >= 2 ) { 
+	if( m && m.length >= 2 ) {
 	    var fn = m[1];
 	    var file = db._files.findOne({filename:fn});
 	    if( file ) {
 		this.outp += this.d.fileTag(this, file);
 	    }
-	    else 
+	    else
 		this.outp += "?";
 	}
 	return;
@@ -331,9 +328,9 @@ content.WikiParser.prototype._line = function(str) {
     if( trimmed == "<nowiki>" ) { this.noWiki++; return; }
     if( trimmed == "<nohtml>" ) { this.noHtml++; return; }
 
-    if( this.preMode && this.d != this.htmldevice ) { 
-	this.outp += str + '\n'; 
-	return; 
+    if( this.preMode && this.d != this.htmldevice ) {
+	this.outp += str + '\n';
+	return;
     }
 
     if( this.noHtml ) {
@@ -380,7 +377,7 @@ content.WikiParser.prototype._line = function(str) {
 
     // links
     if( str.match(/\[/) || str.match(/\]/) ) {
-        if( this.prefixRE ) { 
+        if( this.prefixRE ) {
 	    str = str.replace(this.prefixRE, '[[');
 	}
         str = content.WikiParser._repl(this.link, str);
@@ -412,6 +409,12 @@ content.WikiParser.prototype._reset = function() {
     this.level = 0;
 };
 
+/**
+ * Turns wiki markup into HTML.
+ * @param {string} str the wiki text
+ * @param {string} prefix for links
+ * @param {title} title article title
+ */
 content.WikiParser.prototype.toHtml = function(str, prefix, title) {
     lastPrefix = { last: prefix };
 

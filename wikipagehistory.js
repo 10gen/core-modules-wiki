@@ -1,4 +1,12 @@
-log("importing wikipage history, app="+app+" Wiki="+Wiki);
+log.wiki.info("importing wikipage history, app="+app+" Wiki="+Wiki);
+
+/**
+ * Initializes a new piece of history for a wiki page.
+ * @param {ObjectId} wikiPageId the id of the page
+ * @param {string} textDiff a diff of the change made to the wiki page
+ * @param {user} who the user who made the change
+ * @constructor
+ */
 Wiki.WikiPageHistory = function(wikiPageId, textDiff , who ) {
     this.parent = wikiPageId;
     this.diff = textDiff;
@@ -17,7 +25,7 @@ if (db) {
 
 /**
  * Gets the full text of a specific historical version of the current page
- * @param the WikiPageHistory object representing the version requested
+ * @return the text of the wiki page representing the version requested
  */
 // TODO this should allow diffs between two WikiPageHistory objects
 Wiki.WikiPageHistory.prototype.getHistoricalText = function() {
@@ -41,6 +49,10 @@ Wiki.WikiPageHistory.prototype.getHistoricalText = function() {
      return historicalText;
 };
 
+/**
+ * Gets the diff from this wiki history.
+ * @return {string} the diff of this wiki history
+ */
 Wiki.WikiPageHistory.prototype.getDiff = function() {
     return this.diff;
 };

@@ -1,8 +1,17 @@
 
+/**
+ * Takes care of creating, modifying, and deleting wiki pages.
+ * @namespace
+ */
 Wiki.WikiController = function() {};
 
 Wiki.WikiController.TEXT_PARSER = content.WikiParser;
 
+/**
+ * Renames an existing page.  This page must exist and cannot be read-only.  The new name must be valid and unique from existing wiki page names.
+ * @param {WikiPage} wikiPage the page for which to change the name
+ * @return {boolean} false if unsuccessful
+ */
 Wiki.WikiController.renamePage = function(wikiPage, newPageName) {
     // ensure we have a page
     if (!wikiPage) return false;
@@ -13,16 +22,22 @@ Wiki.WikiController.renamePage = function(wikiPage, newPageName) {
 
     // ensure we don't have a page with the new name already
     if (db.wiki.findOne( { name: newPageName } )) {
-        SYSOUT("Can't rename page to " + newPageName + " since a page with that name already exists.");
+        log.wiki.error("Can't rename page to " + newPageName + " since a page with that name already exists.");
         return false;
     } else {
         wikiPage.name = newPageName;
         db.wiki.save(wikiPage);
         response.setResponseCode( 302 );
         response.setHeader("Location", wikiPage.name);
+        return true;
     }
 };
 
+/**
+ * Checks that a string is a valid page name.  A valid page name is non-null, not empty, and not "Main".
+ * @param {string} pageName name to check
+ * @return {boolean} if the name was valid
+ */
 Wiki.WikiController.validatePageName = function(pageName) {
     // pageName can't be null or empty
     if (!pageName) return false;
@@ -36,20 +51,25 @@ Wiki.WikiController.validatePageName = function(pageName) {
     else return true;
 };
 
+/**
+ * Deletes the given wiki page.
+ * @param {WikiPage} the page to delete
+ * @return {boolean} false if the page could not be deleted
+ */
 Wiki.WikiController.deletePage = function(wikiPage) {
-    SYSOUT('in delete');
+    log.wiki.debug('in delete');
     if (!wikiPage) return false;
     if (Wiki.config.readOnly) return false;
 
     // ensure we're not trying to delete the Main page
     if (wikiPage.name == 'Main') {
-        SYSOUT("Can't delete page Main");
+        log.wiki.error("Can't delete page Main");
         return false;
     }
 
     // ensure that the page is resident in the database
     if (!db.wiki.findOne( { name: wikiPage.name } )) {
-        SYSOUT("Can't delete page because it hasn't been saved yet: " + wikiPage.name);
+        log.wiki.error("Can't delete page because it hasn't been saved yet: " + wikiPage.name);
         return false
     }
 
@@ -59,6 +79,11 @@ Wiki.WikiController.deletePage = function(wikiPage) {
     response.setHeader("Location", wikiPage.name);
 };
 
+/**
+ * Creates a breadcrumb trail of navigation for a post.
+ * @param {WikiPage} the post
+ * @return {string} a series of links to the post's parents
+ */
 Wiki.WikiController.getCookieCrumb = function(wikiPage) {
     if (!wikiPage) return '';
 
