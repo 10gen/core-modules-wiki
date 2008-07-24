@@ -1,6 +1,6 @@
-<% core.modules.wiki.pieces.header_search(); %>
-
 <%
+core.modules.wiki.pieces.header_search();
+
 if( !allowModule.wiki ) return;
 var prefix = allowModule.wiki.prefix || "";
 
@@ -29,8 +29,9 @@ var searchTable = new htmltable({
     });
 
 if( prefixRE ) searchTable.filter = function(x) { return x.name.match(prefixRE); }
+
+searchTable.dbview( searchTable.find({}, {name:1}) );
+
+core.modules.wiki.pieces.footer_search();
+
 %>
-
-<% searchTable.dbview( searchTable.find().sort({name:1}) ); %>
-
-<% core.modules.wiki.pieces.footer_search(); %>
