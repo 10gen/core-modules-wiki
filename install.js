@@ -1,4 +1,4 @@
-<% /**
+/**
 *      Copyright (C) 2008 10gen Inc.
 *  
 *    Licensed under the Apache License, Version 2.0 (the "License");
@@ -12,21 +12,15 @@
 *    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 *    See the License for the specific language governing permissions and
 *    limitations under the License.
-*/ %>
+*/
 
-<% core.modules.wiki.pieces.header_wikipage(); %>
+/*
+ *  Wiki app-module installation script; cribbed from the blog
+ */
 
-<%
-    core.modules.wiki.wikipagehistory();
-var versions = request.getParameters('compare');
-assert(versions.length == 2);
-versions = versions.map(function(id){ return db.wiki_history.findOne({_id: id}); });
-var oldversion = (versions[0].ts < versions[1].ts) ? versions[0] : versions[1];
-var newversion = (versions[0].ts < versions[1].ts) ? versions[1] : versions[0];
-var textDiff = Util.Diff.diff(oldversion.getHistoricalText(), newversion.getHistoricalText());
-%>
-<pre>
-<%= textDiff %>
-</pre>
+Wiki.config = arguments[0] || {}
+Wiki.config.prefix = Wiki.config.prefix || "";
 
-<% core.modules.wiki.pieces.footer_wikipage(); %>
+addModule("wiki", Wiki._options);
+
+return Wiki;

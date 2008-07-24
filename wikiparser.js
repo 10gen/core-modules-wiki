@@ -1,3 +1,19 @@
+/**
+*      Copyright (C) 2008 10gen Inc.
+*
+*    Licensed under the Apache License, Version 2.0 (the "License");
+*    you may not use this file except in compliance with the License.
+*    You may obtain a copy of the License at
+*
+*       http://www.apache.org/licenses/LICENSE-2.0
+*
+*    Unless required by applicable law or agreed to in writing, software
+*    distributed under the License is distributed on an "AS IS" BASIS,
+*    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+*    See the License for the specific language governing permissions and
+*    limitations under the License.
+*/
+
 /** Translates wiki markup to html.
  *   See http://www.10gen.com/wiki/wiki.markup <br />
  *<br /><br />
@@ -321,12 +337,30 @@ content.WikiParser.prototype._line = function(str) {
     if( trimmed == "</nohtml>" ) { this.noHtml = 0; return; }
     if( trimmed == "</prenh>" ) { this.noWiki = 0; this.noHtml=0; this.outp+=this.d._pre; this.preMode = 0; return; }
     if( trimmed == "</pre>" ) { this.outp+=this.d._pre; this.preMode = 0; return; }
+    if( trimmed == "</js>" ){
+        if ( Wiki.config.jsAllowed ){
+            this.outp += scope.eval( this._js );
+        }
+        else {
+            this.outp += "javascript not allowed";
+        }
+        this._js = null;
+        this.js=0;
+        return;
+    }
     if( trimmed == "<prenh>" ) {
         this._reLevel(newLevel); this.noWiki=1; this.noHtml=1; this.outp += this.d.pre; this.preMode = 1; return;
     }
     if( trimmed == "<pre>" ) { this._reLevel(newLevel); this.outp += this.d.pre; this.preMode = 1; return; }
     if( trimmed == "<nowiki>" ) { this.noWiki++; return; }
     if( trimmed == "<nohtml>" ) { this.noHtml++; return; }
+    if( trimmed == "<js>" ) { this.js++; return; }
+
+    if ( this.js ){
+        this._js = this._js || "";
+        this._js += "\n" + str;
+        return;
+    }
 
     if( this.preMode && this.d != this.htmldevice ) {
 	this.outp += str + '\n';
@@ -407,6 +441,7 @@ content.WikiParser.prototype._reset = function() {
     this.noHtml = 0;
     this.preMode = 0;
     this.level = 0;
+    this.js = 0;
 };
 
 /**

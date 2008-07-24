@@ -1,3 +1,19 @@
+/**
+*      Copyright (C) 2008 10gen Inc.
+*  
+*    Licensed under the Apache License, Version 2.0 (the "License");
+*    you may not use this file except in compliance with the License.
+*    You may obtain a copy of the License at
+*  
+*       http://www.apache.org/licenses/LICENSE-2.0
+*  
+*    Unless required by applicable law or agreed to in writing, software
+*    distributed under the License is distributed on an "AS IS" BASIS,
+*    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+*    See the License for the specific language governing permissions and
+*    limitations under the License.
+*/
+
 log.Wiki.info("Running wikipage.js.");
 
 /**
@@ -140,3 +156,63 @@ Wiki.WikiPage.prototype.getChildPages = function() {
     return childPages;
 };
 
+Wiki.WikiPage.prototype.getInternalLinkNames = function() {
+    var a = new Array();
+    var tempA;
+    var strings = this.text.split("\n");
+    
+    for (n in strings) {
+        s = strings[n];
+        while ((tempA = /\[\[([^|\[]+)\|[^\[]+\]\]/g.exec(s)) != null) // [[link|pretty text]]
+            a.push(tempA[1]);
+
+        while ((tempA = /\[\[([^|\[]+)\]\]/g.exec(s)) != null) // [[link]]
+            a.push(tempA[1]);
+
+    	// forward chapter links [[fwd}}
+    	// pdf mode uses these to chain together pages
+        // \\? is because of tex pre-escaping brace
+        while ((tempA = /\[\[(.+?)\|.+?\\?\}\\?\}/g.exec(s)) != null) // [[link|pretty text}}
+            a.push(tempA[1]);
+    
+        while ((tempA = /\[\[([^|]+?)\\?\}\\?\}/g.exec(s)) != null) // [[link}}
+            a.push(tempA[1]);
+    
+    	// backward chapter links [[fwd}}
+    	// pdf mode doesn't display as it assumes everything is stiched together
+    	while ((tempA = /\\?\{\\?\{([^|\[]+)\|[^\[]+\]\]/g.exec(s)) != null) // [[link|pretty text}}
+    	    a.push(tempA[1]);
+    
+    	while ((tempA = /\\?\{\\?\{([^|\[]+)\]\]/g.exec(s)) != null) // [[link}}
+    	    a.push(tempA[1]);
+    }
+    
+    var names = new Array();
+    
+    if (a.length == 0) {
+        return names;
+    }
+    
+    for (i in a) {
+        var temp = a[i].replace(/\/wiki\//, "").trim();
+        if ( allowModule && allowModule.wiki && allowModule.wiki.prefix ){
+            if ( ! temp.startsWith( allowModule.wiki.prefix ) )
+                temp = allowModule.wiki.prefix + temp;
+        }
+        names.push(temp);
+    }
+    return names;
+};
+
+Wiki.WikiPage.prototype.getLinkedPages = function() {
+    var names = this.getInternalLinkNames();
+    
+    var re = "^";
+    for (i in names) {
+        re += names[i];
+        if (i < names.length - 1)
+            re += "$|^"
+    }
+    re += "$"
+    return db.wiki.find({name: new RegExp(re, "i")});
+};

@@ -1,0 +1,73 @@
+<% /**
+*      Copyright (C) 2008 10gen Inc.
+*  
+*    Licensed under the Apache License, Version 2.0 (the "License");
+*    you may not use this file except in compliance with the License.
+*    You may obtain a copy of the License at
+*  
+*       http://www.apache.org/licenses/LICENSE-2.0
+*  
+*    Unless required by applicable law or agreed to in writing, software
+*    distributed under the License is distributed on an "AS IS" BASIS,
+*    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+*    See the License for the specific language governing permissions and
+*    limitations under the License.
+*/ %>
+
+<h1>Check Reachability</h1>
+<p>
+<% print.setFormObject( request ); %>
+<form action="check" method="get" accept-charset="utf-8">
+    <input type="text" name="root" id="root"><br>
+    <input type="text" name="filter" id="root">(optional-substring)<br>
+    <p><input type="submit" value="Check"></p>
+</form>
+</p>
+<%
+if (request.root) {
+%>
+    <h2>
+        Pages unreachable from <%= request.root %>
+    </h2>
+    <%= Wiki.config.prefix %>
+
+    <ul>
+        <% 
+        var a = Wiki.getUnreachables(request.root); 
+        if ( request.filter ){
+            a = a.filter( function(z){ return z.name.indexOf( request.filter ) >= 0; } );
+        } 
+        %>
+        <%
+        for (var i = 0; i < a.length; i++) {
+        %>
+            <li>
+                <a href='<%= "/wiki/"+a[i].name %>'><%= a[i].name %></a>
+            </li>
+        <%}%>
+    </ul>
+<%}%>
+
+<h1>Dead Links</h1>
+<p>
+    <ul>
+        <%  
+        var dl = Wiki.getDeadLinks();
+    
+        for (var page in dl) {
+        %>
+            <li>
+                <a href='<%= "/wiki/"+page %>'><%= page %></a> links to:
+                <ul>
+                    <%
+                    for (var i in dl[page]) {
+                    %>
+                        <li>
+                            <%= dl[page][i] %>
+                        </li>
+                    <%}%>
+                </ul>
+            </li>
+        <%}%>
+    </ul>
+</p>
