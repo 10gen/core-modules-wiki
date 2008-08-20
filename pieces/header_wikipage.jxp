@@ -39,7 +39,7 @@ if (!Wiki.config.readOnly)
 
 <div id="wiki">
 
-<form class="search float-right" action="search"><input class="text" type="text" id="searchtext" name="text" onfocus="textFocus=true" onblur="textFocus=false" /><br /><input class="submit" type="submit" value="Search Wiki" /></form>
+<form class="search float-right" action="search"><input class="text" type="text" id="searchtext" name="text" onfocus="textFocus=true" onblur="textFocus=false" /><br /><input type="image" src="/~~/modules/wiki/assets/images/button_search_onwhite.gif" value="Search Wiki" /></form>
 
     <h1><%= Wiki.WikiController.getCookieCrumb(wikiPage) %></h1>
     <% if (wikiPageHistoricalVersion) { %>
