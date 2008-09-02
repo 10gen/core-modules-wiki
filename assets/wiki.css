@@ -132,3 +132,42 @@ ul .column-one-third li {
 }
 
 */
+
+/* pre with language preference */
+
+.select_controller {
+    float:right;
+	background-color:#EFF0E2;
+    margin: 0;
+	padding: 1em 1em .5em 1em;
+	text-align: right;
+}
+
+.pref_language pre {
+	padding-bottom: 0; 
+}
+
+.module-content pre.hide_pre {
+	display: none;
+}
+
+.module-content pre.show_pre {
+	display: block;
+}
+
+.select_controller form {
+    padding: 0;
+}
+
+.module-content {
+	clear:both; 
+}
+
+select {
+	border-color:#cccdbf #CCCCCC #CCCCCC #cccdbf;
+	border-style:solid;
+	border-width:1px;
+	color: #2c65af;
+	font-size: 10px;
+}
+
