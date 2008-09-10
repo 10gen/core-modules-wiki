@@ -86,7 +86,7 @@ if( request.pdf ) {
         }
     }
 
-if ( ! Wiki.config.readOnly && (request['action'] && request['action'] != "Cancel")){
+if ( ! Wiki.config.readOnly && request['action'] != "Cancel"){
         var theFile = request.getFile( "theFile" );
         if (request['rename'] ) {
             Wiki.WikiController.renamePage(wikiPage, request.newName);
