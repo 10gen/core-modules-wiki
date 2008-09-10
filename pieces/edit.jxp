@@ -19,7 +19,7 @@
 <div id="edit_form">
     <form id="wiki_edit_form" method="POST" action="<%= name %>">
         <input type="hidden" name="update" value="true"/>
-        <textarea rows='40' cols='100' name="wikitext" id="wikitext"><%= wikiPage.text ? HTML.encode(wikiPage.text) : '' %></textarea>
+        <textarea rows='35' cols='100' name="wikitext" id="wikitext"><%= wikiPage.text ? HTML.encode(wikiPage.text) : '' %></textarea>
         <p><input name="action" type="submit" value="Save Page"><input type="submit" value="Cancel" name="action" /></p>
     </form>
 </div>

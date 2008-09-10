@@ -62,3 +62,62 @@ var handleHomeKeyPress = function() {
     if(document.getElementById("searchtext") && textFocus) return;
     window.location = 'Main';
 }
+
+head.push('<script type="text/javascript" src="/~~/ui/js/common.js"></script>');
+
+/* --- wiki language selector stuff below --- */
+
+// Display preferred pre area for code snippets
+function displayPreferredPre (tag, id, numElem) {
+    var counter = 0;
+    var elem = document.getElementsByTagName(tag);
+    for ( i = 0; i < elem.length; i++ ) {
+	// ignore misc pre tags
+	if ( elem[i].className == "hide_pre" || elem[i].className == "show_pre" ) {
+	    if ( counter%numElem == 0 ) counter = 0;
+	    counter ++;
+	    if ( counter == id ) {
+		elem[i].className = 'show_pre';
+	    } else {
+		elem[i].className = 'hide_pre';
+	    }
+	}
+    }
+}
+
+// set select value for preferred language
+function setSelectValue (tag, lang) {
+    var elem = document.getElementsByTagName(tag);
+    for ( i = 0; i < elem.length; i++ ) {
+	// ignore misc pre tags
+	if ( elem[i].className == "pref_lang" ) {
+	    elem[i].value = lang;
+	}
+    }
+}
+
+// Delete cookie function
+function deleteCookie ( cookie_name ) {
+    var cookieDate = new Date ( );  // current date & time
+    cookieDate.setTime ( cookieDate.getTime() - 1 );
+    document.cookie = cookie_name += "=; expires=" + cookieDate.toGMTString();
+}
+
+// If cookie is not set set preferredLanguage to javascript on the front end
+if ( ! getCookie ( "preferredLanguage" ) ) {
+    var preferredLanguage = "javascript";
+} else {
+    var preferredLanguage = getCookie ( "preferredLanguage" );
+}
+
+// Change preferred language
+function changePreferred ( selectValue, selectIndex, selectLength ) {
+    var preferredLanguage = selectValue;
+    var preferredIndex = selectIndex + 1;
+    var numElements = selectLength;
+    var cookieExp = 365*24;
+    displayPreferredPre( 'pre', preferredIndex, numElements );
+    setSelectValue( 'select', preferredLanguage ); 
+    setCookie ( 'preferredLanguage', preferredLanguage, cookieExp ); 
+}
+

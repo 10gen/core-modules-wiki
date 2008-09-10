@@ -14,11 +14,18 @@
 *    limitations under the License.
 */
 
-/** Translates wiki markup to html.
- *   See http://www.10gen.com/wiki/wiki.markup <br />
- *<br /><br />
+/**   Translates wiki markup to html.
+ *
+ *    See http://www.10gen.com/wiki/wiki.markup for markup details.
+ *
+ *    Note output can be rendered in HTML or Latex (the latter for PDF support -- see pdf.js).
+ *
  *    Set Wiki.programmer=false to disable "programmer" extensions to the wiki; for example the
  *    programmer extensions auto-link "core.module();" statements in the wiki.
+ *
+ *    <js> is a special tag which lets you inline server side javascript. Obviously you must have some security 
+ *    set up when using that -- it is off by default (jsAllowed field in the wiki config object).
+ *
  * @class
  */
 content.WikiParser = function(device, resultopts) {
@@ -31,7 +38,7 @@ content.WikiParser = function(device, resultopts) {
 	    "\\usepackage{graphicx}\n" +
 	    "\\usepackage{listings,color}\n" +
 	    "\\lstloadlanguages{Java}\n" +
-    //	    "\\lstset{language=Java,showstringspaces=false,breaklines=true}\n" +
+          //"\\lstset{language=Java,showstringspaces=false,breaklines=true}\n" +
 	    "\\lstset{language=Java,showstringspaces=false,breaklines=true,basicstyle=\\ttfamily\\small}\n" +
 
 	    "\\title{" +
@@ -40,10 +47,6 @@ content.WikiParser = function(device, resultopts) {
 	},
 
 	code:
-	/*function(a,b,c) {
-	    print("a:" + a + " b:" + b + " c:" + c + '\n');
-	    return "\\texttt{TEMP}";
-	},*/
 	"\\texttt{$1}",
 
 	h: [
@@ -78,8 +81,9 @@ content.WikiParser = function(device, resultopts) {
 	ul: "\\begin{itemize}", _ul: "\\end{itemize}\n",
 	li: '\\item $2',
 
-	//pre: "\\begin{verbatim}\n", _pre: "\\end{verbatim}\n",
 	pre: "\\begin{lstlisting}\n", _pre: "\\end{lstlisting}\n",
+
+	preLang: function() { },
 
 	colAligns: { c: "", done: false },
 	tr: "$1",
@@ -139,7 +143,10 @@ content.WikiParser = function(device, resultopts) {
 	lt: "\\textless ",
 	gt: "\\textgreater ",
 
-	programmer: []
+	programmer: [],
+
+	emitLangSelectorHeader: function(wikiobj) { return ""; },
+	emitLangSelectorFooter: function() { }
 
     };
 
@@ -199,6 +206,13 @@ content.WikiParser = function(device, resultopts) {
 
 	pre: "<pre>", _pre: "</pre>",
 
+	preLang: function(x) { 
+	    var curLang = request.getCookie("preferredLanguage") || "javascript";
+	    return '<pre class="' + 
+	    (curLang == x ? 'show_pre' : 'hide_pre') +
+	    '">';
+	},
+
 	footer: function() { return ""; },
 
 	lt: "&lt;",
@@ -216,7 +230,28 @@ content.WikiParser = function(device, resultopts) {
 			      c.replace(/[.]/, "/") + '">' + "core." + c + '()</a>';
 			  }
 		      }
-		       ]
+		      ],
+
+	emitLangSelectorHeader: function(wikiobj) {
+	    if( !wikiobj.languages ) return "";
+	    var curLang = request.getCookie("preferredLanguage") || "javascript";
+	    var s = 
+	    '<div class="module-content">' + 
+	    '<div class="select_controller">\n'+
+	    '<form>\n' +
+	    '<select class="pref_lang" onChange="changePreferred( this.value, this.selectedIndex, this.length ); ">\n';
+	    wikiobj.languages.forEach( function(x) { 
+		    s += '<option value="' + x + '"' + 
+			(x == curLang ? ' selected' : '') +
+			 '>' + x + '</option>';
+		});
+	    s += '</select></form></div>\n';
+	    return s;
+	},
+
+	emitLangSelectorFooter: function() { 
+	    return '</div>\n';
+	}
 
     };
 
@@ -356,6 +391,24 @@ content.WikiParser.prototype._line = function(str) {
     if( trimmed == "<nohtml>" ) { this.noHtml++; return; }
     if( trimmed == "<js>" ) { this.js++; return; }
 
+    if( trimmed.startsWith("%") && trimmed.endsWith("%") ) { 
+	var lang = trimmed.replace(/%/g, '');
+	if( lang == "" ) {
+	    // ending %% block
+	    this.outp += this.d._pre; 
+	    this.outp += this.d.emitLangSelectorFooter();
+	    this.preMode = 0; 
+	    return;
+	}
+	if( trimmed.startsWith("%%") )
+	    this.outp+=this.d.emitLangSelectorHeader(this);
+	else {
+	    this.outp+=this.d._pre; this.outp += '\n';
+	}
+	this._reLevel(newLevel); this.outp += this.d.preLang(lang); this.preMode = 1;
+	return;
+    }
+
     if ( this.js ){
         this._js = this._js || "";
         this._js += "\n" + str;
@@ -442,6 +495,18 @@ content.WikiParser.prototype._reset = function() {
     this.preMode = 0;
     this.level = 0;
     this.js = 0;
+
+    /* language selector support
+
+       %%javascript%
+       ...
+       %python%
+       ...
+       %%
+
+     */
+
+    this.languages = ['javascript', 'python'];
 };
 
 /**

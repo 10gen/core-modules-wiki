@@ -26,11 +26,14 @@ else
     head.push('<script type="text/javascript">isEditPage = false;</script>');
 
 head.push('<script type="text/javascript" src="/@@/yui/current/yuiloader/yuiloader-beta.js"></script>');
+
 head.push('<link rel="stylesheet" href="assets/wiki.css" type="text/css">');
 head.addRSS( ( routes ? routes.currentRoot() : "/wiki" )  + "/rss" );
 
-if( !request.edit )
+if( !request.edit ) {
+    head.push('<script type="text/javascript" src="/~~/ui/js/common.js"></script>');
     head.push('<script type="text/javascript" src="assets/client.js"></script>');
+}
 if (!Wiki.config.readOnly)
     head.push('<script type="text/javascript" src="assets/clientedit.js"></script>');
 
@@ -39,7 +42,7 @@ if (!Wiki.config.readOnly)
 
 <div id="wiki">
 
-<form class="search float-right" action="search"><input class="text" type="text" id="searchtext" name="text" onfocus="textFocus=true" onblur="textFocus=false" /><br /><input class="submit" type="submit" value="Search Wiki" /></form>
+<form class="search float-right" action="search"><input class="text" type="text" id="searchtext" name="text" onfocus="textFocus=true" onblur="textFocus=false" /><br /><input type="image" src="/~~/modules/wiki/assets/images/button_search_onwhite.gif" value="Search Wiki" /></form>
 
     <h1><%= Wiki.WikiController.getCookieCrumb(wikiPage) %></h1>
     <% if (wikiPageHistoricalVersion) { %>

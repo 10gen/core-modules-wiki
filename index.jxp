@@ -86,25 +86,26 @@ if( request.pdf ) {
         }
     }
 
-if ( ! Wiki.config.readOnly && request['action'] != "Cancel"){
-        var theFile = request.getFile( "theFile" );
-        if (request['rename'] ) {
-            Wiki.WikiController.renamePage(wikiPage, request.newName);
-        }
-        else if ( request['delete']  ) {
-            Wiki.WikiController.deletePage(wikiPage);
-        }
-        else if (request['update'] ) {
-            log(tojson(request));
-            wikiPage.setText(request.wikitext.replace(/\r?\n/g, "\n"));
-        }
-        else if (theFile) {
-            db._files.save( theFile );
-            wikiPage.files.push(theFile._id);
-            // Note: doesn't create a new historical version.. should it?
-            db.wiki.save(wikiPage);
-        }
+log(tojson(request));
+var theFile = request.getFile( "theFile" );
+if (request['rename'] ) {
+    Wiki.WikiController.renamePage(wikiPage, request.newName);
+}
+else if ( request['delete']  ) {
+    Wiki.WikiController.deletePage(wikiPage);
+}
+else if (theFile) {
+    db._files.save( theFile );
+    wikiPage.files.push(theFile._id);
+    // Note: doesn't create a new historical version.. should it?
+    db.wiki.save(wikiPage);
+}
+if ( ! Wiki.config.readOnly && request['action'] != "Cancel" ){
+    if (request['update'] ) {
+        log(tojson(request));
+        wikiPage.setText(request.wikitext.replace(/\r?\n/g, "\n"));
     }
+}
 
     if ( request.edit )
             core.modules.wiki.pieces.edit();
