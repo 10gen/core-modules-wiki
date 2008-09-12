@@ -63,8 +63,6 @@ var handleHomeKeyPress = function() {
     window.location = 'Main';
 }
 
-head.push('<script type="text/javascript" src="/~~/ui/js/common.js"></script>');
-
 /* --- wiki language selector stuff below --- */
 
 // Display preferred pre area for code snippets
