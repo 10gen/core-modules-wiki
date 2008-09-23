@@ -28,12 +28,9 @@ Wiki.WikiPage = function(name) {
     this.files = [];
 };
 
-log.Wiki.info("db: " + db);
-
 if (db) {
     db.wiki.ensureIndex( { name : 1 } );
     db.wiki.ensureIndex( { lastEdit : 1 } );
-
     db.wiki.setConstructor( Wiki.WikiPage );
 }
 

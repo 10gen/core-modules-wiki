@@ -521,8 +521,7 @@ content.WikiParser.prototype.toHtml = function(str, prefix, title) {
     this._reset();
     if( prefix && prefix.length ) {
         var s = prefix.replace(/\./g, '\.');
-        this.prefixRE = RegExp("\\[\\[" + s, 'g');
-	log.wiki.error("prefix2:re:" + this.prefixRE);
+        this.prefixRE = RegExp("\\[\\[ *" + s, 'g');
     }
 
     var ln = str.split(/\r?\n/);
