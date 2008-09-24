@@ -29,6 +29,7 @@
  * @class
  */
 content.WikiParser = function(device, resultopts) {
+
     this.texdevice = {
 
 	header: function(title) {
@@ -152,7 +153,9 @@ content.WikiParser = function(device, resultopts) {
 
     this.htmldevice = {
 
-	header: function() { return ""; },
+	header: function() { 
+	    return "";
+	},
 
 	code: "<code>$1</code>",
 
@@ -206,10 +209,11 @@ content.WikiParser = function(device, resultopts) {
 
 	pre: "<pre>", _pre: "</pre>",
 
-	preLang: function(x) { 
-	    var curLang = request.getCookie("preferredLanguage") || "javascript";
-	    return '<pre class="' + 
-	    (curLang == x ? 'show_pre' : 'hide_pre') +
+	preLang: function(x, wikiobj) { 
+	    var curLang = content.WikiParser.curLang();
+	    return '<pre id="' + x + '" class="' + 
+                ((curLang == x || x == wikiobj.defaultLang) ? 
+		'show_pre' : 'hide_pre') +
 	    '">';
 	},
 
@@ -234,8 +238,9 @@ content.WikiParser = function(device, resultopts) {
 
 	emitLangSelectorHeader: function(wikiobj) {
 	    if( !wikiobj.languages ) return "";
-	    var curLang = request.getCookie("preferredLanguage") || "javascript";
+	    var curLang = content.WikiParser.curLang();
 	    var s = 
+	    wikiobj.languageWarning + 
 	    '<div class="module-content">' + 
 	    '<div class="select_controller">\n'+
 	    '<form>\n' +
@@ -246,6 +251,7 @@ content.WikiParser = function(device, resultopts) {
 			 '>' + x + '</option>';
 		});
 	    s += '</select></form></div>\n';
+	    wikiobj.languageWarning = "";
 	    return s;
 	},
 
@@ -391,6 +397,15 @@ content.WikiParser.prototype._line = function(str) {
     if( trimmed == "<nohtml>" ) { this.noHtml++; return; }
     if( trimmed == "<js>" ) { this.js++; return; }
 
+    /* language selector support
+
+       %%lang1%
+       content
+       %lang2%
+       content
+       ...
+       %%
+     */
     if( trimmed.startsWith("%") && trimmed.endsWith("%") ) { 
 	var lang = trimmed.replace(/%/g, '');
 	if( lang == "" ) {
@@ -400,12 +415,20 @@ content.WikiParser.prototype._line = function(str) {
 	    this.preMode = 0; 
 	    return;
 	}
-	if( trimmed.startsWith("%%") )
+	if( trimmed.startsWith("%%") ) {
+	    // first one.
+	    //	    // check if curLang is available.  if not, just show the first language content, with a warning
+	    var curLang = content.WikiParser.curLang();
+	    if( this.fullText.indexOf('%' + curLang + '%') < 0 ) {
+		this.defaultLang = lang;
+		if( this.languageWarning.length ) 
+		    this.languageWarning = '<div id="langMissing"><i>Code examples for this page are not available for the selected language, Javascript shown instead.</i></div>';
+	    }
 	    this.outp+=this.d.emitLangSelectorHeader(this);
-	else {
+	} else {
 	    this.outp+=this.d._pre; this.outp += '\n';
 	}
-	this._reLevel(newLevel); this.outp += this.d.preLang(lang); this.preMode = 1;
+	this._reLevel(newLevel); this.outp += this.d.preLang(lang, this); this.preMode = 1;
 	return;
     }
 
@@ -488,6 +511,9 @@ content.WikiParser.prototype._line = function(str) {
 };
 
 content.WikiParser.prototype._reset = function() {
+    this.languageWarning = '<div id="langMissing" style="display: none"><i>Code examples for this page are not available for the selected language, Javascript shown instead.</i></div>';
+    this.defaultLang = null;
+    this.fullText = null;
     this.prefixRE = null;
     this.outp = "";
     this.noWiki = 0;
@@ -506,8 +532,18 @@ content.WikiParser.prototype._reset = function() {
 
      */
 
-    this.languages = ['javascript', 'python'];
+    var x = db.settings.findOne.cache(90);
+    if( !x ) {
+	x = { wiki_languages: ['javascript', 'python', 'ruby'] };
+	if( db.settings.count() == 0 ) // check as caching may have kicked in.
+	    db.settings.save(x);
+    }
+    this.languages = x.wiki_languages;
 };
+
+content.WikiParser.curLang = function() { 
+    return request.getCookie("preferredLanguage") || "javascript";
+}
 
 /**
  * Turns wiki markup into HTML.
@@ -523,6 +559,8 @@ content.WikiParser.prototype.toHtml = function(str, prefix, title) {
         var s = prefix.replace(/\./g, '\.');
         this.prefixRE = RegExp("\\[\\[ *" + s, 'g');
     }
+
+    this.fullText = str;
 
     var ln = str.split(/\r?\n/);
     for( var i = 0; i < ln.length; i++ ) {

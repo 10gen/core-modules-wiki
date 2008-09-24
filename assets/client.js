@@ -66,21 +66,31 @@ var handleHomeKeyPress = function() {
 /* --- wiki language selector stuff below --- */
 
 // Display preferred pre area for code snippets
-function displayPreferredPre (tag, id, numElem) {
+function displayPreferredPre (tag, language) {
     var counter = 0;
     var elem = document.getElementsByTagName(tag);
+    var first = null;
+    hideElement("langMissing");
     for ( i = 0; i < elem.length; i++ ) {
 	// ignore misc pre tags
 	if ( elem[i].className == "hide_pre" || elem[i].className == "show_pre" ) {
-	    if ( counter%numElem == 0 ) counter = 0;
-	    counter ++;
-	    if ( counter == id ) {
+	    if( elem[i].id == 'javascript' ) { 
+		if( first ) {
+		    showElement("langMissing");
+		    first.className = 'show_pre';
+		}
+		first = elem[i];
+	    }
+	    if( elem[i].id == language ) {
 		elem[i].className = 'show_pre';
+		first = null;
 	    } else {
 		elem[i].className = 'hide_pre';
 	    }
 	}
     }
+    if( first ) 
+	first.className = 'show_pre';
 }
 
 // set select value for preferred language
@@ -114,8 +124,7 @@ function changePreferred ( selectValue, selectIndex, selectLength ) {
     var preferredIndex = selectIndex + 1;
     var numElements = selectLength;
     var cookieExp = 365*24;
-    displayPreferredPre( 'pre', preferredIndex, numElements );
+    displayPreferredPre( 'pre', preferredLanguage );
     setSelectValue( 'select', preferredLanguage ); 
     setCookie ( 'preferredLanguage', preferredLanguage, cookieExp ); 
 }
-
