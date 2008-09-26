@@ -19,7 +19,7 @@
 
 <% if( Wiki.navpane ) { %>
 
-<div id="wiki_navpane" class="nav">
+<div id="wiki_navpane">
   <%= Wiki.navpane %>
 </div>
 
