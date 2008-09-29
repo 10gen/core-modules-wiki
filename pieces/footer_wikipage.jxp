@@ -35,23 +35,27 @@
 %>
 <hr />
     <h3>Child Articles</h3>
-    <ul>
 	<div class="column-one-third">
+    <ul>
     <%
 		childPages.slice(0, third_ceil).forEach(core.modules.wiki.pieces.html.childpagelist);
 	%>
+    </ul>
 	</div>
 	<div class="column-one-third">
+    <ul style="word-wrap: break-word;">
     <%
        childPages.slice(third_ceil, childPages.length - third).forEach(core.modules.wiki.pieces.html.childpagelist);
     %>
+    </ul>
     </div>
     <div class="column-one-third">
+    <ul>
     <%
        childPages.slice(childPages.length - third).forEach(core.modules.wiki.pieces.html.childpagelist);
     %>
-	</div>
     </ul>
+	</div>
 <%}%>
 </div>
 
