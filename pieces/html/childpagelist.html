@@ -12,6 +12,7 @@
 *    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 *    See the License for the specific language governing permissions and
 *    limitations under the License.
-*/ %>
-
-<li><a href="$name">$name</a></li>
+*/ 
+/* &#8202; to allow word wrap */
+%>
+<li><a href="$name">$name.replace(/\./g, '.<wbr>')</a></li>

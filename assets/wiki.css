@@ -107,7 +107,7 @@ ul .column-one-third li {
 /* Layout */
 
 .column-one-third {
-	width: 234px;
+	width: 225px;
 	float: left;
 	padding-right: 10px;
 }
