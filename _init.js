@@ -9,6 +9,8 @@ core.content.htmlhelper();
 core.html.html();
 
 core.util.diff();
+core.ext.getlist();
+core.content.search();
 
 core.modules.wiki.wiki();
 core.modules.wiki.wikipage();

@@ -32,7 +32,26 @@ if (db) {
     db.wiki.ensureIndex( { name : 1 } );
     db.wiki.ensureIndex( { lastEdit : 1 } );
     db.wiki.setConstructor( Wiki.WikiPage );
+    Search.fixTable(db.wiki, {_searchIndex:1, _searchIndex_0_2: .2});
 }
+
+/**
+ * For searches
+ */
+Wiki.WikiPage.prototype.SEARCH_FIELDS = { name : 1 , text : .2 };
+Wiki.WikiPage.prototype.SEARCH_OPTIONS = {};
+
+Wiki.WikiPage.prototype.presave = function(){
+    var extraFields = Ext.getlist(allowModule, 'wiki', 'extraFields') || {};
+    for(var key in extraFields){
+        var weight = Ext.getlist(extraFields, key, 'searchWeight');
+        if(weight != null)
+            Wiki.WikiPage.prototype.SEARCH_FIELDS[key] = weight;
+    }
+
+    Search.index( this , this.SEARCH_FIELDS , this.SEARCH_OPTIONS );
+};
+
 
 /**
  * Returns an array with the page name components split into an array.
