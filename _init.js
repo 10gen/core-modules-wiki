@@ -17,7 +17,7 @@ core.modules.wiki.wikipage();
 core.modules.wiki.wikipagehistory();
 core.modules.wiki.data.check();
 
-Wiki.config = allowModule.wiki || {};
+Wiki.config = allowModule && allowModule.wiki ? allowModule.wiki : {};
 Wiki.config.prefix = Wiki.config.prefix || "";
 
 
