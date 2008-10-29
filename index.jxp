@@ -89,6 +89,11 @@ if( request.pdf ) {
     return;
 }
 
+if( !user ) {
+    core.modules.wiki.pieces.view();
+    return;
+}
+
 // Check to see if we have been asked for an historical version of this wiki page
 var wikiPageHistoricalVersion;
 if (request.version) {
