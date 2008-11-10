@@ -165,6 +165,10 @@ Wiki.WikiPage.prototype.getChildPages = function() {
 
     var childPages = db.wiki.find( { name: pageNameRegularExpression } ).sort( { name: 1 } ).toArray();
 
+    var currentPageName = this.name;
+    childPages = childPages.filter( function( c ) {
+        return c.name != currentPageName;
+    });
     childPages.forEach( function(childPage) {
         childPage.name = childPage.name.replace(new RegExp('^' + Wiki.config.prefix), '');
     });
