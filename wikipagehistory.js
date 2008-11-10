@@ -59,7 +59,9 @@ Wiki.WikiPageHistory.prototype.getHistoricalText = function() {
      var historicalText = wikiPage.text;
      for (var i in wikiPageHistories) {
          wikiPageHistory = wikiPageHistories[i];
-         historicalText = Util.Diff.applyBackwards(historicalText, wikiPageHistory.diff);
+         // If we get diff == {}, bad diff -- only apply good ones
+         if(typeof wikiPageHistory.diff != "object")
+             historicalText = Util.Diff.applyBackwards(historicalText, wikiPageHistory.diff);
 
          if (this._id == wikiPageHistory._id) break;
      }
