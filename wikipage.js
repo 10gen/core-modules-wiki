@@ -109,7 +109,7 @@ Wiki.WikiPage.prototype.setText = function(newText) {
     if (Wiki.config && Wiki.config.readOnly) return false;
 
     // get a diff of the text of the Wiki, and save it in a WikiHistory object.
-    var textDiff = Util.Diff.diff(this.text, newText);
+    var textDiff = Util.Diff.diff(this.text, newText) || '';
 
     var wikiPageHistory = new Wiki.WikiPageHistory(this._id, textDiff, user);
 
