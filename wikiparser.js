@@ -32,169 +32,169 @@ content.WikiParser = function(device, resultopts) {
 
     this.texdevice = {
 
-	header: function(title) {
-	    if( resultopts.stitching ) return '% next wiki document ' + resultopts.stitching + '\n';
-	    print("TITLE:" + title + ":\n");
-	    return "\\documentclass[12pt]{article}\n" +
-	    "\\usepackage{graphicx}\n" +
-	    "\\usepackage{listings,color}\n" +
-	    "\\lstloadlanguages{Java}\n" +
+        header: function(title) {
+            if( resultopts.stitching ) return '% next wiki document ' + resultopts.stitching + '\n';
+            print("TITLE:" + title + ":\n");
+            return "\\documentclass[12pt]{article}\n" +
+            "\\usepackage{graphicx}\n" +
+            "\\usepackage{listings,color}\n" +
+            "\\lstloadlanguages{Java}\n" +
           //"\\lstset{language=Java,showstringspaces=false,breaklines=true}\n" +
-	    "\\lstset{language=Java,showstringspaces=false,breaklines=true,basicstyle=\\ttfamily\\small}\n" +
+            "\\lstset{language=Java,showstringspaces=false,breaklines=true,basicstyle=\\ttfamily\\small}\n" +
 
-	    "\\title{" +
-	        	    (title.replace(/_/g,'\\_') || "no title") +
-	    "}\n\\date{}\n\\begin{document}\n\\maketitle\n";
-	},
+            "\\title{" +
+                            (title.replace(/_/g,'\\_') || "no title") +
+            "}\n\\date{}\n\\begin{document}\n\\maketitle\n";
+        },
 
-	code:
-	"\\texttt{$1}",
+        code:
+        "\\texttt{$1}",
 
-	h: [
-	    "\\part{$1}",
-	    "\\section{$1}",
-	    "\\subsection{$1}",
-	    "\\subsubsection{$1}",
-	    "\\subsubsection{$1}"
-	    ],
+        h: [
+            "\\part{$1}",
+            "\\section{$1}",
+            "\\subsection{$1}",
+            "\\subsubsection{$1}",
+            "\\subsubsection{$1}"
+            ],
 
-	p: "\n\n",
+        p: "\n\n",
 
-	// links (a=anchor)
+        // links (a=anchor)
         a1:'$2',
         a2:'$1',
         a3:'$2',
         a4:'$1',
-	fwd1:function(s,a,b){
-	    if( resultopts ) resultopts.stitch = a;
-	    return '';
-	},
-	fwd2:function(s,a){
-	    if( resultopts )
-		resultopts.stitchopts = a;
-	    return '';
-	},
-	bwd1:'', bwd2:'',
+        fwd1:function(s,a,b){
+            if( resultopts ) resultopts.stitch = a;
+            return '';
+        },
+        fwd2:function(s,a){
+            if( resultopts )
+                resultopts.stitchopts = a;
+            return '';
+        },
+        bwd1:'', bwd2:'',
 
         bold: "\\textbf{$1}",
-	italics: "\\emph{$1}",
+        italics: "\\emph{$1}",
 
-	ul: "\\begin{itemize}", _ul: "\\end{itemize}\n",
-	li: '\\item $2',
+        ul: "\\begin{itemize}", _ul: "\\end{itemize}\n",
+        li: '\\item $2',
 
-	pre: "\\begin{lstlisting}\n", _pre: "\\end{lstlisting}\n",
+        pre: "\\begin{lstlisting}\n", _pre: "\\end{lstlisting}\n",
 
-	preLang: function() { },
+        preLang: function() { },
 
-	colAligns: { c: "", done: false },
-	tr: "$1",
-	_tr: function() { this.colAligns.done = true; return "\\\\\n "; },
-	td: function() { if( !this.colAligns.done ) this.colAligns.c += "l "; return " & $1"; },
-	_table: function(wikiobj) {
-	    //print("\n\n_TABLE " + this.colAligns.c + "\n\n");
-	    wikiobj.outp = wikiobj.outp.replace(/~~~~~42/, this.colAligns.c);
-	},
+        colAligns: { c: "", done: false },
+        tr: "$1",
+        _tr: function() { this.colAligns.done = true; return "\\\\\n "; },
+        td: function() { if( !this.colAligns.done ) this.colAligns.c += "l "; return " & $1"; },
+        _table: function(wikiobj) {
+            //print("\n\n_TABLE " + this.colAligns.c + "\n\n");
+            wikiobj.outp = wikiobj.outp.replace(/~~~~~42/, this.colAligns.c);
+        },
 
-	fileTag: function(wikiobj,fileobj)
-	{
-	    // epstopdf myfig.eps
-	    var fpath = "tmp/" + fileobj.filename;
-	    fileobj.writeToLocalFile(fpath);
-	    return '\\includegraphics[width=0.8\\textwidth]{' + fpath + '}\n';
-	},
+        fileTag: function(wikiobj,fileobj)
+        {
+            // epstopdf myfig.eps
+            var fpath = "tmp/" + fileobj.filename;
+            fileobj.writeToLocalFile(fpath);
+            return '\\includegraphics[width=0.8\\textwidth]{' + fpath + '}\n';
+        },
 
-	footer: function() {
-	    return resultopts.stitch ? '\n' : "\\end{document}\n";
-	},
+        footer: function() {
+            return resultopts.stitch ? '\n' : "\\end{document}\n";
+        },
 
-	escape: function(s) {
-	    // html tags:
-	    var old = s;
-	    s = s.replace(/<table[^>]*>/g, "\n\n\\begin{tabular}{ ~~~~~42}\n");
-	    if( s != old ) {
-		this.colAligns.c = "l ";
-		this.colAligns.done = false;
-		// don't escape our backslashes just added.
-		// if it turns out there might be other stuff that needs escaping on the
-		// same line, you might want to put a special marker in now and replace them
-		// at the end of this function.
-		return s;
-	    }
-	    s = s.replace(/<\/table[^>]*>/g, "\\end{tabular}\n");
-	    if( s != old ) return s;
-	    s = s.replace(/<[^>]+>/g, "");
+        escape: function(s) {
+            // html tags:
+            var old = s;
+            s = s.replace(/<table[^>]*>/g, "\n\n\\begin{tabular}{ ~~~~~42}\n");
+            if( s != old ) {
+                this.colAligns.c = "l ";
+                this.colAligns.done = false;
+                // don't escape our backslashes just added.
+                // if it turns out there might be other stuff that needs escaping on the
+                // same line, you might want to put a special marker in now and replace them
+                // at the end of this function.
+                return s;
+            }
+            s = s.replace(/<\/table[^>]*>/g, "\\end{tabular}\n");
+            if( s != old ) return s;
+            s = s.replace(/<[^>]+>/g, "");
 
-	    s = s.replace(/_/g, "\\_");
-	    s = s.replace(/&/g, "\\&");
-	    s = s.replace(/\\$/g, "\\$");
-	    s = s.replace(/%/g, "\\%");
-//	    s = s.replace(/\[/g, "\\[");
-	    s = s.replace(/\{/g, "\\{");
-	    s = s.replace(/\}/g, "\\}");
-	    s = s.replace(/#/g, "\\#");
-	    s = s.replace(/\^/g, "\\^");
-	    s = s.replace(/~/g, "\\~");
-	    s = s.replace(/</g, "\\textless ");
-	    s = s.replace(/>/g, "\\textgreater ");
-//	    s = s.replace(/\[/g, "B");
+            s = s.replace(/_/g, "\\_");
+            s = s.replace(/&/g, "\\&");
+            s = s.replace(/\\$/g, "\\$");
+            s = s.replace(/%/g, "\\%");
+//          s = s.replace(/\[/g, "\\[");
+            s = s.replace(/\{/g, "\\{");
+            s = s.replace(/\}/g, "\\}");
+            s = s.replace(/#/g, "\\#");
+            s = s.replace(/\^/g, "\\^");
+            s = s.replace(/~/g, "\\~");
+            s = s.replace(/</g, "\\textless ");
+            s = s.replace(/>/g, "\\textgreater ");
+//          s = s.replace(/\[/g, "B");
 
-	    return s;
-	},
+            return s;
+        },
 
-	lt: "\\textless ",
-	gt: "\\textgreater ",
+        lt: "\\textless ",
+        gt: "\\textgreater ",
 
-	programmer: [],
+        programmer: [],
 
-	emitLangSelectorHeader: function(wikiobj) { return ""; },
-	emitLangSelectorFooter: function() { }
+        emitLangSelectorHeader: function(wikiobj) { return ""; },
+        emitLangSelectorFooter: function() { }
 
     };
 
     this.htmldevice = {
 
-	header: function() {
-	    return "";
-	},
+        header: function() {
+            return "";
+        },
 
-	code: "<code>$1</code>",
+        code: "<code>$1</code>",
 
-	h: [
-	    "<h1 id=\"$1\">$1</h1>",
-	    "<h2 id=\"$1\">$1</h2>",
-	    "<h3 id=\"$1\">$1</h3>",
-	    "<h4 id=\"$1\">$1</h4>",
-	    "<h5 id=\"$1\">$1</h5>"],
+        h: [
+            "<h1 id=\"$1\">$1</h1>",
+            "<h2 id=\"$1\">$1</h2>",
+            "<h3 id=\"$1\">$1</h3>",
+            "<h4 id=\"$1\">$1</h4>",
+            "<h5 id=\"$1\">$1</h5>"],
 
-	tr: "<tr><td>$1</td>",
-	_tr: function() { return "</tr>"; },
-	td: function() { return "<td>$1</td>"; },
-	_table: function(wikiobj) { },
+        tr: "<tr><td>$1</td>",
+        _tr: function() { return "</tr>"; },
+        td: function() { return "<td>$1</td>"; },
+        _table: function(wikiobj) { },
 
-	// /~~/f?id=4852c3b3796c7a2e00fa2526&maxY=160&maxX=300
-	fileTag: function(wikiobj,fileobj)
-	{
-	    return '<img src="/~~/f?id=' + fileobj._id + '">';
-	},
+        // /~~/f?id=4852c3b3796c7a2e00fa2526&maxY=160&maxX=300
+        fileTag: function(wikiobj,fileobj)
+        {
+            return '<img src="/~~/f?id=' + fileobj._id + '">';
+        },
 
-	p: "<p>\n",
+        p: "<p>\n",
 
         a1:'<a href="$1">$2</a>',  // [[wikipagename|description]]
         a2:'<a href="$1">$1</a>',  // [[wikipagename]]
 
         //a3:'<a href="$1">$2</a>',  // [http://foo description]
-	a3: function(m,link,desc) {
-	    return "<a " +
-	    (link.indexOf("10gen") < 0 ? 'class="external-link" ' : '') +
-	    'href="' + link + '">' + desc + '</a>';
-	},
+        a3: function(m,link,desc) {
+            return "<a " +
+            (link.indexOf("10gen") < 0 ? 'class="external-link" ' : '') +
+            'href="' + link + '">' + desc + '</a>';
+        },
 
         //a4:'<a href="$1">$1</a>',  // [http://foo]
-	a4: function(m,link) {
-	    return "<a " +
-	    (link.indexOf("10gen") < 0 ? 'class="external-link" ' : '') +
-	    'href="' + link + '">' + link + '</a>';
-	},
+        a4: function(m,link) {
+            return "<a " +
+            (link.indexOf("10gen") < 0 ? 'class="external-link" ' : '') +
+            'href="' + link + '">' + link + '</a>';
+        },
 
         fwd1:'Next: <a href="$1">$2</a>',
         fwd2:'Next: <a href="$1">$1</a>',
@@ -202,62 +202,62 @@ content.WikiParser = function(device, resultopts) {
         bwd2:'Prev: <a href="$1">$1</a>',
 
         bold: "<strong>$1</strong>",
-	italics: "<em>$1</em>",
+        italics: "<em>$1</em>",
 
-	ul: "<ul>", _ul: "</ul>",
-	li: '<li class="u">$2</li>',
+        ul: "<ul>", _ul: "</ul>",
+        li: '<li class="u">$2</li>',
 
-	pre: "<pre>", _pre: "</pre>",
+        pre: "<pre>", _pre: "</pre>",
 
-	preLang: function(x, wikiobj) {
-	    var curLang = content.WikiParser.curLang();
-	    return '<pre id="' + x + '" class="' +
+        preLang: function(x, wikiobj) {
+            var curLang = content.WikiParser.curLang();
+            return '<pre id="' + x + '" class="' +
                 ((curLang == x || x == wikiobj.defaultLang) ?
-		'show_pre' : 'hide_pre') +
-	    '">';
-	},
+                'show_pre' : 'hide_pre') +
+            '">';
+        },
 
-	footer: function() { return ""; },
+        footer: function() { return ""; },
 
-	lt: "&lt;",
-	gt: "&gt;",
+        lt: "&lt;",
+        gt: "&gt;",
 
-	escape: function(s) { return s; },
+        escape: function(s) { return s; },
 
-	// wiki extensions helpful for development
-	// the first rule here automatically marks up a core.foo() tag to link to
-	// the associated corejs.10gen.com/admin/doc page.
-	programmer : [
+        // wiki extensions helpful for development
+        // the first rule here automatically marks up a core.foo() tag to link to
+        // the associated corejs.10gen.com/admin/doc page.
+        programmer : [
                       { r: /^([^\[]*)core\.([a-zA-Z0-9_.]+)\(\)/g,
-			s: function(a,b,c) {
-			      return b + '<a href="http://corejs.10gen.com/admin/doc?f=/' +
-			      c.replace(/[.]/, "/") + '">' + "core." + c + '()</a>';
-			  }
-		      }
-		      ],
+                        s: function(a,b,c) {
+                              return b + '<a href="http://corejs.10gen.com/admin/doc?f=/' +
+                              c.replace(/[.]/, "/") + '">' + "core." + c + '()</a>';
+                          }
+                      }
+                      ],
 
-	emitLangSelectorHeader: function(wikiobj) {
-	    if( !wikiobj.languages ) return "";
-	    var curLang = content.WikiParser.curLang();
-	    var s =
-	    wikiobj.languageWarning +
-	    '<div class="module-content">' +
-	    '<div class="select_controller">\n'+
-	    '<form>\n' +
-	    '<select class="pref_lang" onChange="changePreferred( this.value, this.selectedIndex, this.length ); ">\n';
-	    wikiobj.languages.forEach( function(x) {
-		    s += '<option value="' + x + '"' +
-			(x == curLang ? ' selected' : '') +
-			 '>' + x + '</option>';
-		});
-	    s += '</select></form></div>\n';
-	    wikiobj.languageWarning = "";
-	    return s;
-	},
+        emitLangSelectorHeader: function(wikiobj) {
+            if( !wikiobj.languages ) return "";
+            var curLang = content.WikiParser.curLang();
+            var s =
+            wikiobj.languageWarning +
+            '<div class="module-content">' +
+            '<div class="select_controller">\n'+
+            '<form>\n' +
+            '<select class="pref_lang" onChange="changePreferred( this.value, this.selectedIndex, this.length ); ">\n';
+            wikiobj.languages.forEach( function(x) {
+                    s += '<option value="' + x + '"' +
+                        (x == curLang ? ' selected' : '') +
+                         '>' + x + '</option>';
+                });
+            s += '</select></form></div>\n';
+            wikiobj.languageWarning = "";
+            return s;
+        },
 
-	emitLangSelectorFooter: function() {
-	    return '</div>\n';
-	}
+        emitLangSelectorFooter: function() {
+            return '</div>\n';
+        }
 
     };
 
@@ -284,17 +284,17 @@ content.WikiParser = function(device, resultopts) {
         { r: /\[\[([^|\[]+)\|([^\[]+)\]\]/g , s: this.d.a1 }, // [[link|pretty text]]
         { r: /\[\[([^\[]+)\]\]/g , s: this.d.a2 }, // [[link]]
 
-	// forward chapter links [[fwd}}
-	// pdf mode uses these to chain together pages
-	// \\? is because of tex pre-escaping brace
+        // forward chapter links [[fwd}}
+        // pdf mode uses these to chain together pages
+        // \\? is because of tex pre-escaping brace
         { r: /\[\[(.+?)\|(.+?)\\?\}\\?\}/g , s: this.d.fwd1 }, // [[link|pretty text}}
-	//        { r: /\[\[([^|\[]+)\|([^\[]+)\\?\}\\?\}/g , s: this.d.fwd1 }, // [[link|pretty text}}
+        //        { r: /\[\[([^|\[]+)\|([^\[]+)\\?\}\\?\}/g , s: this.d.fwd1 }, // [[link|pretty text}}
         { r: /\[\[(.+?)\\?\}\\?\}/g , s: this.d.fwd2 }, // [[link}}
 
-	// backward chapter links [[fwd}}
-	// pdf mode doesn't display as it assumes everything is stiched together
-	{ r: /\\?\{\\?\{([^|\[]+)\|([^\[]+)\]\]/g , s: this.d.bwd1 }, // [[link|pretty text}}
-	{ r: /\\?\{\\?\{([^\[]+)\]\]/g , s: this.d.bwd2 }, // [[link}}
+        // backward chapter links [[fwd}}
+        // pdf mode doesn't display as it assumes everything is stiched together
+        { r: /\\?\{\\?\{([^|\[]+)\|([^\[]+)\]\]/g , s: this.d.bwd1 }, // [[link|pretty text}}
+        { r: /\\?\{\\?\{([^\[]+)\]\]/g , s: this.d.bwd2 }, // [[link}}
 
         // FIXME: this following regexp doesn't eat trailing spaces, because
         // the name part matches "anything which isn't a bracket"; probably
@@ -352,26 +352,26 @@ content.WikiParser.prototype._line = function(str) {
     var newLevel = 0;
 
     if( trimmed.length == 0 ) {
-	if( !this.lastWasHdr )
-	    this.outp += this.preMode ? '\n' : this.d.p;
-	return;
+        if( !this.lastWasHdr )
+            this.outp += this.preMode ? '\n' : this.d.p;
+        return;
     }
 
     this.lastWasHdr = null;
 
     /* <file id="name"> must be on a line by itself, for now */
     if( trimmed.startsWith("<file ") ) {
-	var m = trimmed.match(/name="(.*)"/);
-	if( m && m.length >= 2 ) {
-	    var fn = m[1];
-	    var file = db._files.findOne({filename:fn});
-	    if( file ) {
-		this.outp += this.d.fileTag(this, file);
-	    }
-	    else
-		this.outp += "?";
-	}
-	return;
+        var m = trimmed.match(/name="(.*)"/);
+        if( m && m.length >= 2 ) {
+            var fn = m[1];
+            var file = db._files.findOne({filename:fn});
+            if( file ) {
+                this.outp += this.d.fileTag(this, file);
+            }
+            else
+                this.outp += "?";
+        }
+        return;
     }
 
     if( trimmed == "</nowiki>" ) { this.noWiki = 0; return; }
@@ -407,29 +407,29 @@ content.WikiParser.prototype._line = function(str) {
        %%
      */
     if( trimmed.startsWith("%") && trimmed.endsWith("%") ) {
-	var lang = trimmed.replace(/%/g, '');
-	if( lang == "" ) {
-	    // ending %% block
-	    this.outp += this.d._pre;
-	    this.outp += this.d.emitLangSelectorFooter();
-	    this.preMode = 0;
-	    return;
-	}
-	if( trimmed.startsWith("%%") ) {
-	    // first one.
-	    //	    // check if curLang is available.  if not, just show the first language content, with a warning
-	    var curLang = content.WikiParser.curLang();
-	    if( this.fullText.indexOf('%' + curLang + '%') < 0 ) {
-		this.defaultLang = lang;
-		if( this.languageWarning.length )
-		    this.languageWarning = '<div id="langMissing"><i>Code examples for this page are not available for the selected language, Javascript shown instead.</i></div>';
-	    }
-	    this.outp+=this.d.emitLangSelectorHeader(this);
-	} else {
-	    this.outp+=this.d._pre; this.outp += '\n';
-	}
-	this._reLevel(newLevel); this.outp += this.d.preLang(lang, this); this.preMode = 1;
-	return;
+        var lang = trimmed.replace(/%/g, '');
+        if( lang == "" ) {
+            // ending %% block
+            this.outp += this.d._pre;
+            this.outp += this.d.emitLangSelectorFooter();
+            this.preMode = 0;
+            return;
+        }
+        if( trimmed.startsWith("%%") ) {
+            // first one.
+            //      // check if curLang is available.  if not, just show the first language content, with a warning
+            var curLang = content.WikiParser.curLang();
+            if( this.fullText.indexOf('%' + curLang + '%') < 0 ) {
+                this.defaultLang = lang;
+                if( this.languageWarning.length )
+                    this.languageWarning = '<div id="langMissing"><i>Code examples for this page are not available for the selected language, Javascript shown instead.</i></div>';
+            }
+            this.outp+=this.d.emitLangSelectorHeader(this);
+        } else {
+            this.outp+=this.d._pre; this.outp += '\n';
+        }
+        this._reLevel(newLevel); this.outp += this.d.preLang(lang, this); this.preMode = 1;
+        return;
     }
 
     if ( this.js ){
@@ -439,8 +439,8 @@ content.WikiParser.prototype._line = function(str) {
     }
 
     if( this.preMode && this.d != this.htmldevice ) {
-	this.outp += str + '\n';
-	return;
+        this.outp += str + '\n';
+        return;
     }
 
     if( this.noHtml ) {
@@ -465,31 +465,31 @@ content.WikiParser.prototype._line = function(str) {
             this.inRow = false;
             str = this.d._tr() + str;
         }
-	this.d._table(this);
+        this.d._table(this);
     }
 
     if( this.noWiki>0 ) { this._reLevel(newLevel); this.outp += (str+"\n"); return; }
 
     // ==headers==
     if( str.match(/^=.*[^=]+=/) ) {
-	var old = str;
+        var old = str;
         str = content.WikiParser._repl(this.h, str);
-	this.lastWasHdr = str != old;
+        this.lastWasHdr = str != old;
     }
 
     // raw urls - disabled, see above
     str = content.WikiParser._repl(this.urls, str);
 
     if( str.match(/core/) && Wiki && (Wiki.programmer==null || !Wiki.programmer) ) {
-	var old = str;
-	str = content.WikiParser._repl(this.d.programmer, str);
+        var old = str;
+        str = content.WikiParser._repl(this.d.programmer, str);
     }
 
     // links
     if( str.match(/\[/) || str.match(/\]/) ) {
         if( this.prefixRE ) {
-	    str = str.replace(this.prefixRE, '[[');
-	}
+            str = str.replace(this.prefixRE, '[[');
+        }
         str = content.WikiParser._repl(this.link, str);
     }
 
@@ -499,7 +499,7 @@ content.WikiParser.prototype._line = function(str) {
     // * bullets
     if( str.match(/^\*/) ) {
         var stars = "" + str.match(/^\*+/);
-	//stars = stars.replace( /\*/g, "u" );
+        //stars = stars.replace( /\*/g, "u" );
         newLevel = stars.length;
         str = str.replace( /^(\*+ *)(.*)/, this.d.li );
     }
@@ -534,9 +534,9 @@ content.WikiParser.prototype._reset = function() {
 
     var x = db.settings.findOne.cache(90);
     if( !x ) {
-	x = { wiki_languages: ['javascript', 'python', 'ruby'] };
-	if( db.settings.count() == 0 ) // check as caching may have kicked in.
-	    db.settings.save(x);
+        x = { wiki_languages: ['javascript', 'python', 'ruby'] };
+        if( db.settings.count() == 0 ) // check as caching may have kicked in.
+            db.settings.save(x);
     }
     this.languages = x.wiki_languages;
 };
