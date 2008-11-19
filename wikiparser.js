@@ -58,6 +58,8 @@ content.WikiParser = function(device, resultopts) {
             "\\subsubsection{$1}"
             ],
 
+        h_anchor: [],
+
         p: "\n\n",
 
         // links (a=anchor)
@@ -160,11 +162,19 @@ content.WikiParser = function(device, resultopts) {
         code: "<code>$1</code>",
 
         h: [
-            "<h1 id=\"$1\">$1</h1>",
-            "<h2 id=\"$1\">$1</h2>",
-            "<h3 id=\"$1\">$1</h3>",
-            "<h4 id=\"$1\">$1</h4>",
-            "<h5 id=\"$1\">$1</h5>"],
+            "<h1>$1</h1>",
+            "<h2>$1</h2>",
+            "<h3>$1</h3>",
+            "<h4>$1</h4>",
+            "<h5>$1</h5>"],
+
+        h_anchor: [
+            "<h1 id=\"$2\">$1</h1>",
+            "<h2 id=\"$2\">$1</h2>",
+            "<h3 id=\"$2\">$1</h3>",
+            "<h4 id=\"$2\">$1</h4>",
+            "<h5 id=\"$2\">$1</h5>"],
+
 
         tr: "<tr><td>$1</td>",
         _tr: function() { return "</tr>"; },
@@ -273,6 +283,11 @@ content.WikiParser = function(device, resultopts) {
 
     // ==header==
     this.h = [
+        { r: /^=====\s*(.*)\s*=====#([\w-]+)$/, s: this.d.h_anchor[4] || this.d.h[4] },
+        { r: /^====\s*(.*)\s*====#([\w-]+)$/, s: this.d.h_anchor[3] || this.d.h[3] },
+        { r: /^===\s*(.*)\s*===#([\w-]+)$/, s: this.d.h_anchor[2] || this.d.h[2] },
+        { r: /^==\s*(.*)\s*==#([\w-]+)$/, s: this.d.h_anchor[1] || this.d.h[1] },
+        { r: /^=\s*(.*)\s*=#([\w-]+)$/, s: this.d.h_anchor[0] || this.d.h[0] },
         { r: /^=====\s*(.*)\s*=====/, s: this.d.h[4] },
         { r: /^====\s*(.*)\s*====/, s: this.d.h[3] },
         { r: /^===\s*(.*)\s*===/, s: this.d.h[2] },
