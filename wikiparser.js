@@ -160,11 +160,11 @@ content.WikiParser = function(device, resultopts) {
 	code: "<code>$1</code>",
 
 	h: [
-	    "<h1>$1</h1>",
-	    "<h2>$1</h2>",
-	    "<h3>$1</h3>",
-	    "<h4>$1</h4>",
-	    "<h5>$1</h5>"],
+	    "<h1 id=\"$1\">$1</h1>",
+	    "<h2 id=\"$1\">$1</h2>",
+	    "<h3 id=\"$1\">$1</h3>",
+	    "<h4 id=\"$1\">$1</h4>",
+	    "<h5 id=\"$1\">$1</h5>"],
 
 	tr: "<tr><td>$1</td>",
 	_tr: function() { return "</tr>"; },
