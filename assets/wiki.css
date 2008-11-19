@@ -109,6 +109,7 @@ ul .column-one-third li {
 .column-one-third {
 	width: 225px;
 	float: left;
+	margin-top: -.5em;
 	padding-right: 10px;
 }
 
@@ -163,8 +164,32 @@ ul .column-one-third li {
 	clear:both; 
 }
 
+/* wiki files */
+
+#wiki_files {
+	margin: -.5em 0 2em 0;
+	padding-top: 0;
+}
+
+/* file upload */
+
+div.file_upload {
+	padding: 2em 0 1em 0;
+	clear: both;
+}
+
+/* form */
+
+.submit_button {
+	border-color:#CCC #999 #999 #CCC;
+	border-style:solid;
+	border-width:1px;
+	background-color: #f0f0f0;
+	color: #333;
+}
+
 select {
-	border-color:#cccdbf #CCCCCC #CCCCCC #cccdbf;
+	border-color:#cccdbf #CCC #CCC #cccdbf;
 	border-style:solid;
 	border-width:1px;
 	color: #2c65af;

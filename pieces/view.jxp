@@ -39,15 +39,17 @@
 
 </div>
 
+<% if(wikiPage.files){ %>
+<h4>Files:</h4>
 <ul id="wiki_files" class="files">
-      <% if(wikiPage.files){ 
+      <% 
           wikiPage.files.forEach(function(fileid){
               var file = db._files.findOne({_id: fileid});
 	      if(file) {
-	      %>
+	    %>
       <li><a href="/~~/f?id=<%= fileid %>"><%= file.filename %></a></li>
       <% }}); %>
-      <% } %>
 </ul>
+<% } %>
 
 <% core.modules.wiki.pieces.footer_wikipage(); %>
