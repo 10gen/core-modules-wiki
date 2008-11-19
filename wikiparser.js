@@ -23,7 +23,7 @@
  *    Set Wiki.programmer=false to disable "programmer" extensions to the wiki; for example the
  *    programmer extensions auto-link "core.module();" statements in the wiki.
  *
- *    <js> is a special tag which lets you inline server side javascript. Obviously you must have some security 
+ *    <js> is a special tag which lets you inline server side javascript. Obviously you must have some security
  *    set up when using that -- it is off by default (jsAllowed field in the wiki config object).
  *
  * @class
@@ -153,7 +153,7 @@ content.WikiParser = function(device, resultopts) {
 
     this.htmldevice = {
 
-	header: function() { 
+	header: function() {
 	    return "";
 	},
 
@@ -209,10 +209,10 @@ content.WikiParser = function(device, resultopts) {
 
 	pre: "<pre>", _pre: "</pre>",
 
-	preLang: function(x, wikiobj) { 
+	preLang: function(x, wikiobj) {
 	    var curLang = content.WikiParser.curLang();
-	    return '<pre id="' + x + '" class="' + 
-                ((curLang == x || x == wikiobj.defaultLang) ? 
+	    return '<pre id="' + x + '" class="' +
+                ((curLang == x || x == wikiobj.defaultLang) ?
 		'show_pre' : 'hide_pre') +
 	    '">';
 	},
@@ -239,14 +239,14 @@ content.WikiParser = function(device, resultopts) {
 	emitLangSelectorHeader: function(wikiobj) {
 	    if( !wikiobj.languages ) return "";
 	    var curLang = content.WikiParser.curLang();
-	    var s = 
-	    wikiobj.languageWarning + 
-	    '<div class="module-content">' + 
+	    var s =
+	    wikiobj.languageWarning +
+	    '<div class="module-content">' +
 	    '<div class="select_controller">\n'+
 	    '<form>\n' +
 	    '<select class="pref_lang" onChange="changePreferred( this.value, this.selectedIndex, this.length ); ">\n';
-	    wikiobj.languages.forEach( function(x) { 
-		    s += '<option value="' + x + '"' + 
+	    wikiobj.languages.forEach( function(x) {
+		    s += '<option value="' + x + '"' +
 			(x == curLang ? ' selected' : '') +
 			 '>' + x + '</option>';
 		});
@@ -255,7 +255,7 @@ content.WikiParser = function(device, resultopts) {
 	    return s;
 	},
 
-	emitLangSelectorFooter: function() { 
+	emitLangSelectorFooter: function() {
 	    return '</div>\n';
 	}
 
@@ -406,13 +406,13 @@ content.WikiParser.prototype._line = function(str) {
        ...
        %%
      */
-    if( trimmed.startsWith("%") && trimmed.endsWith("%") ) { 
+    if( trimmed.startsWith("%") && trimmed.endsWith("%") ) {
 	var lang = trimmed.replace(/%/g, '');
 	if( lang == "" ) {
 	    // ending %% block
-	    this.outp += this.d._pre; 
+	    this.outp += this.d._pre;
 	    this.outp += this.d.emitLangSelectorFooter();
-	    this.preMode = 0; 
+	    this.preMode = 0;
 	    return;
 	}
 	if( trimmed.startsWith("%%") ) {
@@ -421,7 +421,7 @@ content.WikiParser.prototype._line = function(str) {
 	    var curLang = content.WikiParser.curLang();
 	    if( this.fullText.indexOf('%' + curLang + '%') < 0 ) {
 		this.defaultLang = lang;
-		if( this.languageWarning.length ) 
+		if( this.languageWarning.length )
 		    this.languageWarning = '<div id="langMissing"><i>Code examples for this page are not available for the selected language, Javascript shown instead.</i></div>';
 	    }
 	    this.outp+=this.d.emitLangSelectorHeader(this);
@@ -541,7 +541,7 @@ content.WikiParser.prototype._reset = function() {
     this.languages = x.wiki_languages;
 };
 
-content.WikiParser.curLang = function() { 
+content.WikiParser.curLang = function() {
     return request.getCookie("preferredLanguage") || "javascript";
 }
 
