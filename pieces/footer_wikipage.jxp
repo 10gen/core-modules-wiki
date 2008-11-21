@@ -26,6 +26,20 @@
        if( Wiki.config.menuFooter ) Wiki.config.menuFooter(wikiPage);
     %>
 </div>
+<% if(wikiPage.files && wikiPage.files.length){ %>
+<hr />
+<h4 style="margin-top: 2.5em; ">Files</h4>
+<ul id="wiki_files" class="files">
+      <% 
+          wikiPage.files.forEach(function(fileid){
+              var file = db._files.findOne({_id: fileid});
+	      if(file) {
+	      %>
+      <li><a href="/~~/f?id=<%= fileid %>"><%= file.filename %></a></li>
+      <% }}); %>
+</ul>
+<% } %>
+
 <div>
 <%
     var childPages = wikiPage.getChildPages(wikiPage);
@@ -34,7 +48,7 @@
         var third = Math.floor(childPages.length/3);
 %>
 <hr />
-    <h3>Child Articles</h3>
+    <h4>Child Articles</h4>
 	<div class="column-one-third">
     <ul>
     <%
@@ -76,11 +90,15 @@
 </div>
 
 <% if (!Wiki.config.readOnly) { %>
+  
+<div class="file_upload">
+<hr /> 
 <form method="POST" enctype="multipart/form-data" >
    <input type="hidden" name="MAX_FILE_SIZE" value="<%= 1024 * 1024 * 100 %>" />
    Choose a file to upload: <input name="theFile" type="file" />
    <input type="submit" value="Upload File" />
 </form>
+</div>
 <% } %>
 
 <% 
