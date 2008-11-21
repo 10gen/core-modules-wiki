@@ -22,12 +22,10 @@ var deleteKeyListener;
 var saveKeyListener;
 
 var editKeySelector = { alt: false, keys: 69 };
-var renameKeySelector = { alt: false, keys: 82 };
 var deleteKeySelector = { alt: false, keys: 68 };
 var saveKeySelector = { ctrl: true, keys: [13, 3] };
 
 var editKeySelectorWebKit = { alt: true, keys: 69 };
-var renameKeySelectorWebKit = { alt: true, keys: 82 };
 var deleteKeySelectorWebKit = { alt: true, keys: 68 };
 var saveKeySelectorWebKit = { alt: true, keys: 83 };
 
@@ -85,13 +83,6 @@ clientEditLoader.insert({
                     editKeyListener.enable();
 
                     if (YAHOO.env.ua.webkit) {
-                        renameKeyListener = new YAHOO.util.KeyListener(document, renameKeySelectorWebKit, handleRenameKeyPress);
-                    } else {
-                        renameKeyListener = new YAHOO.util.KeyListener(document, renameKeySelector, handleRenameKeyPress);
-                    }
-                    renameKeyListener.enable();
-
-                    if (YAHOO.env.ua.webkit) {
                         deleteKeyListener = new YAHOO.util.KeyListener(document, deleteKeySelectorWebKit, handleDeleteKeyPress);
                     } else {
                         deleteKeyListener = new YAHOO.util.KeyListener(document, deleteKeySelector, handleDeleteKeyPress);
@@ -121,29 +112,23 @@ var handleEditKeyPress = function() {
     window.location = window.location.toString().replace(/#.+$/, '') + "?edit=true";
 }
 
-var handleRenameKeyPress = function(e, obj) {
-    if(document.getElementById("searchtext") && textFocus) return;
-    document.getElementById('rename_popup').style.display = 'block';
-    renameDialog.show();
-    editKeyListener.disable();
-    renameKeyListener.disable();
-    deleteKeyListener.disable();
-    if(isEditPage){
-        // Otherwise, there's no save key
-        saveKeyListener.disable();
-    }
-    searchKeyListener.disable();
-    homeKeyListener.disable();
-    obj[1].preventDefault();
-    obj[1].stopPropagation();
-}
-
 var handleDeleteKeyPress = function(e, obj) {
     if(document.getElementById("searchtext") && textFocus) return;
     document.getElementById('delete_popup').style.display = "block";
     deleteDialog.show();
     editKeyListener.disable();
-    renameKeyListener.disable();
+    deleteKeyListener.disable();
+    if(isEditPage){
+        saveKeyListener.disable();
+    }
+    searchKeyListener.disable();
+    homeKeyListener.disable();
+}
+
+var handleRenameClick = function() {
+    document.getElementById('rename_popup').style.display = "block";
+    renameDialog.show();
+    editKeyListener.disable();
     deleteKeyListener.disable();
     if(isEditPage){
         saveKeyListener.disable();
@@ -159,7 +144,6 @@ var handleSaveKeyPress = function(e, obj) {
 var handleConfirm = function() {
     this.submit();
     editKeyListener.enable();
-    renameKeyListener.enable();
     deleteKeyListener.enable();
     if(isEditPage){
         saveKeyListener.enable();
@@ -171,7 +155,6 @@ var handleConfirm = function() {
 var handleCancel = function() {
     this.hide();
     editKeyListener.enable();
-    renameKeyListener.enable();
     deleteKeyListener.enable();
     if(isEditPage){
         saveKeyListener.enable();
