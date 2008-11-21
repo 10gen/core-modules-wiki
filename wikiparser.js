@@ -489,6 +489,12 @@ content.WikiParser.prototype._line = function(str) {
 
     if( this.noWiki>0 ) { this._reLevel(newLevel); this.outp += (str+"\n"); return; }
 
+    // `lang`
+    var lang = /`language`/g;
+    if( str.match( lang ) ) {
+        str = str.replace( lang, this.curLang() );
+    }
+
     // ==headers==
     if( str.match(/^=.*[^=]+=/) ) {
         var old = str;
