@@ -406,13 +406,14 @@ content.WikiParser.prototype._line = function(str) {
        ...
        %%
      */
-    if( trimmed.startsWith("%") && trimmed.endsWith("%") ) { 
+    if( trimmed.startsWith("%") && trimmed.endsWith("%") ) {
 	var lang = trimmed.replace(/%/g, '');
 	if( lang == "" ) {
 	    // ending %% block
 	    this.outp += this.d._pre; 
 	    this.outp += this.d.emitLangSelectorFooter();
 	    this.preMode = 0; 
+            this.inMultilang = false;
 	    return;
 	}
 	if( trimmed.startsWith("%%") ) {
@@ -425,11 +426,14 @@ content.WikiParser.prototype._line = function(str) {
 		    this.languageWarning = '<div id="langMissing"><i>Code examples for this page are not available for the selected language, Javascript shown instead.</i></div>';
 	    }
 	    this.outp+=this.d.emitLangSelectorHeader(this);
-	} else {
+            this.inMultilang = true;
+	} else if( this.inMultilang ) {
 	    this.outp+=this.d._pre; this.outp += '\n';
 	}
-	this._reLevel(newLevel); this.outp += this.d.preLang(lang, this); this.preMode = 1;
-	return;
+        if( this.inMultilang ) {
+	    this._reLevel(newLevel); this.outp += this.d.preLang(lang, this); this.preMode = 1;
+	    return;
+        }
     }
 
     if ( this.js ){
