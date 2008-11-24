@@ -489,12 +489,6 @@ content.WikiParser.prototype._line = function(str) {
 
     if( this.noWiki>0 ) { this._reLevel(newLevel); this.outp += (str+"\n"); return; }
 
-    // `lang`
-    var lang = /`language`/g;
-    if( str.match( lang ) ) {
-        str = str.replace( lang, this.curLang() );
-    }
-
     // ==headers==
     if( str.match(/^=.*[^=]+=/) ) {
         var old = str;
@@ -580,6 +574,38 @@ content.WikiParser.prototype.toHtml = function(str, prefix, title) {
     lastPrefix = { last: prefix };
 
     this._reset();
+
+    // `preprocessing`
+    var alreadyLoaded = [ title ];
+    var preprocess = [ { regex : /`cookie:(\w+)`/, func : function( m ) {
+        return request && m ? request.getCookie( m[1] ) : "";
+    } },
+    { regex : /`([\w\.]+)`/, func : function( m ) {
+        if( m ) {
+            if( !alreadyLoaded.contains( m[1] ) )
+                alreadyLoaded.add( m[1] );
+            else {
+                log.ERROR( "the same file has been included more than once" );
+                return "$1";
+            }
+            var entry = db.wiki.findOne( { name : m[1] } );
+            if( entry != null ) {
+                return entry.text;
+            }
+        }
+        return "$1";
+    } } ];
+
+    for( var p =0; p < preprocess.length; p++ ) {
+        var m = preprocess[p].regex.exec( str );
+        while( m && m.length != 0 ) {
+            var x = preprocess[p].func( m );
+            preprocess[p].regex.lastIndex = 0;
+            str = str.replace( preprocess[p].regex, x );
+            m = preprocess[p].regex.exec( str );
+        }
+    }
+
     if( prefix && prefix.length ) {
         var s = prefix.replace(/\./g, '\.');
         this.prefixRE = RegExp("\\[\\[ *" + s, 'g');
