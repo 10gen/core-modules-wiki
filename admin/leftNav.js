@@ -17,6 +17,7 @@
 var tree = [
     {pretty: 'Wiki', target: false},
     {pretty: 'Check', target: 'check'},
+    {pretty: 'Batch Rename', target: 'batch'},
 ];
 
 var reverse = {

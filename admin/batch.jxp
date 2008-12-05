@@ -1,0 +1,32 @@
+
+<form method="POST">
+  Change 
+  <input type="text" name="regex" <%= request.regex ? 'value="'+request.regex+'"' : '' %>/> 
+  to 
+  <input type="text" name="replacement" <%= request.replacement ? 'value="'+request.replacement+'"' : '' %>/> 
+  <input type="submit" name="action" value="Preview" />
+  <input type="submit" name="action" value="Change" />
+</form>
+
+<br />
+
+<%
+
+if( request.action ) {
+   %>
+   <h1><%= request.action %></h1>
+   <%
+   r = new RegExp( request.regex );
+   cursor = db.wiki.find( { name : r } );
+   while( cursor != null && cursor.hasNext() ) {
+       var entry = cursor.next();
+       var oldName = entry.name;
+       entry.name = entry.name.replace( r, request.replacement );
+       if( request.action == "Change" ) {
+           db.wiki.save( entry );
+       }
+       print( oldName + " -> " + entry.name + "<br />");
+   }
+}
+
+%>
