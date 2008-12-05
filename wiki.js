@@ -89,6 +89,7 @@ Wiki.WikiController.deletePage = function(wikiPage) {
         return false
     }
 
+    db.wiki.deleted.save( wikiPage );
     db.wiki.remove(wikiPage);
     response.setResponseCode(302);
      // for ourselves to requery to make sure it is gone, and to get out of "POST" mode

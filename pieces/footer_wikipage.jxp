@@ -21,7 +21,14 @@
     	s: <a href="search">search</a> &nbsp; h: <a href="Main">wiki home</a>
         <br/>
         <div class="user"><a href="?pdf=1">pdf</a></div>
-        ctrl-enter: saves after editing &nbsp; <a href="http://www.10gen.com/wiki/wiki.markup" target="help">markup help</a> &nbsp; <a href="?history=true">history</a> &nbsp; <a style="cursor: pointer" onclick="handleRenameClick()">rename page</a>
+        ctrl-enter: saves after editing &nbsp; 
+                   <a href="http://www.10gen.com/wiki/wiki.markup" target="help">markup help</a> 
+                   &nbsp; 
+                   <a href="?history=true">history</a> 
+                   &nbsp;
+                   <a style="cursor: pointer" onclick="handleDeleteClick()">delete page</a>
+                   &nbsp; 
+                   <a style="cursor: pointer" onclick="handleRenameClick()">rename page</a>
     <% }
        if( Wiki.config.menuFooter ) Wiki.config.menuFooter(wikiPage);
     %>

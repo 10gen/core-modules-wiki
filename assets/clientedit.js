@@ -17,16 +17,12 @@
 var clientEditLoader = new YAHOO.util.YUILoader();
 
 var editKeyListener;
-var renameKeyListener;
-var deleteKeyListener;
 var saveKeyListener;
 
 var editKeySelector = { alt: false, keys: 69 };
-var deleteKeySelector = { alt: false, keys: 68 };
 var saveKeySelector = { ctrl: true, keys: [13, 3] };
 
 var editKeySelectorWebKit = { alt: true, keys: 69 };
-var deleteKeySelectorWebKit = { alt: true, keys: 68 };
 var saveKeySelectorWebKit = { alt: true, keys: 83 };
 
 clientEditLoader.insert({
@@ -81,13 +77,6 @@ clientEditLoader.insert({
                         editKeyListener = new YAHOO.util.KeyListener(document, editKeySelector, handleEditKeyPress);
                     }
                     editKeyListener.enable();
-
-                    if (YAHOO.env.ua.webkit) {
-                        deleteKeyListener = new YAHOO.util.KeyListener(document, deleteKeySelectorWebKit, handleDeleteKeyPress);
-                    } else {
-                        deleteKeyListener = new YAHOO.util.KeyListener(document, deleteKeySelector, handleDeleteKeyPress);
-                    }
-                    deleteKeyListener.enable();
                 }
 
                 // only set this up on an edit page
@@ -112,12 +101,10 @@ var handleEditKeyPress = function() {
     window.location = window.location.toString().replace(/#.+$/, '') + "?edit=true";
 }
 
-var handleDeleteKeyPress = function(e, obj) {
-    if(document.getElementById("searchtext") && textFocus) return;
+var handleDeleteClick = function() {
     document.getElementById('delete_popup').style.display = "block";
     deleteDialog.show();
     editKeyListener.disable();
-    deleteKeyListener.disable();
     if(isEditPage){
         saveKeyListener.disable();
     }
@@ -129,7 +116,6 @@ var handleRenameClick = function() {
     document.getElementById('rename_popup').style.display = "block";
     renameDialog.show();
     editKeyListener.disable();
-    deleteKeyListener.disable();
     if(isEditPage){
         saveKeyListener.disable();
     }
@@ -144,7 +130,6 @@ var handleSaveKeyPress = function(e, obj) {
 var handleConfirm = function() {
     this.submit();
     editKeyListener.enable();
-    deleteKeyListener.enable();
     if(isEditPage){
         saveKeyListener.enable();
     }
@@ -155,7 +140,6 @@ var handleConfirm = function() {
 var handleCancel = function() {
     this.hide();
     editKeyListener.enable();
-    deleteKeyListener.enable();
     if(isEditPage){
         saveKeyListener.enable();
     }
