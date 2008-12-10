@@ -32,7 +32,7 @@ clientEditLoader.insert({
     onSuccess: function(loader) {
             YAHOO.util.Event.onDOMReady( function() {
                 // create the delete dialog
-                deleteDialog = new YAHOO.widget.Dialog("delete_popup", {
+                deleteDialog = new YAHOO.widget.Dialog("xgen-delete-popup", {
                                         fixedCenter: true,
                                         visible: false,
                                         fixedCenter: true,
@@ -55,7 +55,7 @@ clientEditLoader.insert({
                 deleteDialog.form.appendChild(deleteElement);
 
                 // create the rename dialog
-                renameDialog = new YAHOO.widget.Dialog("rename_popup", {
+                renameDialog = new YAHOO.widget.Dialog("xgen-rename-popup", {
                                         fixedCenter: true,
                                         visible: false,
                                         fixedCenter: true,
@@ -102,7 +102,7 @@ var handleEditKeyPress = function() {
 }
 
 var handleDeleteClick = function() {
-    document.getElementById('delete_popup').style.display = "block";
+    document.getElementById('xgen-delete-popup').style.display = "block";
     deleteDialog.show();
     editKeyListener.disable();
     if(isEditPage){
@@ -113,7 +113,7 @@ var handleDeleteClick = function() {
 }
 
 var handleRenameClick = function() {
-    document.getElementById('rename_popup').style.display = "block";
+    document.getElementById('xgen-rename-popup').style.display = "block";
     renameDialog.show();
     editKeyListener.disable();
     if(isEditPage){

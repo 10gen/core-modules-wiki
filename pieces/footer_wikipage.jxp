@@ -36,7 +36,7 @@
 <% if(wikiPage.files && wikiPage.files.length){ %>
 <hr />
 <h4 style="margin-top: 2.5em; ">Files</h4>
-<ul id="wiki_files" class="files">
+<ul id="xgen-wiki-files" class="files">
       <%
           wikiPage.files.forEach(function(fileid){
               var file = db._files.findOne({_id: fileid});
@@ -56,21 +56,21 @@
 %>
 <hr />
     <h4>Child Articles</h4>
-	<div class="column-one-third">
+	<div class="xgen-column-one-third">
     <ul>
     <%
 		childPages.slice(0, third_ceil).forEach(core.modules.wiki.pieces.html.childpagelist);
 	%>
     </ul>
 	</div>
-	<div class="column-one-third">
+	<div class="xgen-column-one-third">
     <ul style="word-wrap: break-word;">
     <%
        childPages.slice(third_ceil, childPages.length - third).forEach(core.modules.wiki.pieces.html.childpagelist);
     %>
     </ul>
     </div>
-    <div class="column-one-third">
+    <div class="xgen-column-one-third">
     <ul>
     <%
        childPages.slice(childPages.length - third).forEach(core.modules.wiki.pieces.html.childpagelist);
@@ -81,7 +81,7 @@
 </div>
 
 <% if (!Wiki.config.readOnly) { %>
-    <div class="popup" id="rename_popup" style="display: none;">
+    <div class="popup" id="xgen-rename-popup" style="display: none;">
         <div class="hd">Confirm Page Rename</div>
         <div class="bd">
             <form method="POST">
@@ -92,13 +92,13 @@
         <div class="ft"></div>
     </div>
 
-    <div class="popup" id="delete_popup" style="display: none;"></div>
+    <div class="popup" id="xgen-delete-popup" style="display: none;"></div>
 <% } %>
 </div>
 
 <% if (!Wiki.config.readOnly) { %>
 
-<div class="file_upload">
+<div class="xgen-file-upload">
 <hr />
 <form method="POST" enctype="multipart/form-data" >
    <input type="hidden" name="MAX_FILE_SIZE" value="<%= 1024 * 1024 * 100 %>" />

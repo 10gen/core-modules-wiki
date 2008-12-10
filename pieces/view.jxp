@@ -26,7 +26,7 @@
 <% } %>
 
 
-<div id="wiki_content" class="content" >
+<div id="xgen-wiki-content" class="content" >
   <% if (wikiPageHistoricalVersion) {
       if (wikiPageShowDiff) { %>
   <pre><%= wikiPageHistoricalVersion.getDiff() %></pre>

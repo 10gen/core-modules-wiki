@@ -215,7 +215,7 @@ content.WikiParser = function(device, resultopts) {
         italics: "<em>$1</em>",
 
         ul: "<ul>", _ul: "</ul>",
-        li: '<li class="u">$2</li>',
+        li: '<li class="xgen-u">$2</li>',
 
         pre: "<pre>", _pre: "</pre>",
 
@@ -223,7 +223,7 @@ content.WikiParser = function(device, resultopts) {
             var curLang = content.WikiParser.curLang();
             return '<pre id="' + x + '" class="' +
                 ((curLang == x || x == wikiobj.defaultLang) ?
-                'show_pre' : 'hide_pre') +
+                'xgen-show-pre' : 'xgen-hide-pre') +
             '">';
         },
 
@@ -252,7 +252,7 @@ content.WikiParser = function(device, resultopts) {
             var s =
             wikiobj.languageWarning +
             '<div class="module-content">' +
-            '<div class="select_controller">\n'+
+            '<div class="xgen-select-controller">\n'+
             '<form>\n' +
             '<select class="pref_lang" onChange="changePreferred( this.value, this.selectedIndex, this.length ); ">\n';
             wikiobj.languages.forEach( function(x) {

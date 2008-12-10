@@ -73,24 +73,24 @@ function displayPreferredPre (tag, language) {
     hideElement("langMissing");
     for ( i = 0; i < elem.length; i++ ) {
 	// ignore misc pre tags
-	if ( elem[i].className == "hide_pre" || elem[i].className == "show_pre" ) {
+	if ( elem[i].className == "xgen-hide-pre" || elem[i].className == "xgen-show-pre" ) {
 	    if( elem[i].id == 'javascript' ) { 
 		if( first ) {
 		    showElement("langMissing");
-		    first.className = 'show_pre';
+		    first.className = 'xgen-show-pre';
 		}
 		first = elem[i];
 	    }
 	    if( elem[i].id == language ) {
-		elem[i].className = 'show_pre';
+		elem[i].className = 'xgen-show-pre';
 		first = null;
 	    } else {
-		elem[i].className = 'hide_pre';
+		elem[i].className = 'xgen-hide-pre';
 	    }
 	}
     }
     if( first ) 
-	first.className = 'show_pre';
+	first.className = 'xgen-show-pre';
 }
 
 // set select value for preferred language

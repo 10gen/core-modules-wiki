@@ -14,12 +14,12 @@
 *    limitations under the License.
 */
 
-.wiki {
+.xgen-wiki {
 	font-family: sans-serif;
 	font-size: 100%;
 }
 
-.wiki blockquote {
+.xgen-wiki blockquote {
 	border-left: solid 2px #333;
 	margin: 5px;
 	padding: 5px;
@@ -34,14 +34,14 @@ pre {
     padding: .5em .5em .5em 1em;
 }
 
-.wiki_content ul {
+.xgen-xgen-wiki-content ul {
 #    padding-left: 10px;
 }
 
-.u { font-size:100%; }
-.uu { font-size:75%; }
+.xgen-u { font-size:100%; }
+.xgen-uu { font-size:75%; }
 
-.wiki .help {
+.xgen-wiki .help {
 	font-size: 70%;
 	background: #ddd;
 	border: 1px solid #ddd;
@@ -49,94 +49,73 @@ pre {
 	overflow: auto;
 }
 
-.wiki .user {
+.xgen-wiki .user {
     float: right;
 }
 
-.wiki .top {
+.xgen-wiki .top {
 	background: #ddb;
 }
 
-.wiki h1 {
+.xgen-wiki h1 {
 	font-weight: bold;
 	font-size: 130%;
 	margin-top: 20px;
 	color: #1C4692;
 }
 
-.wiki h2 {
+.xgen-wiki h2 {
 	font-weight: bold;
 	font-size: 120%;
 	margin-top: 10px;
 }
 
-.wiki h3 {
+.xgen-wiki h3 {
 	font-weight: bold;
 	font-size: 110%;
 	margin-top: 5px;
 }
 
-.wiki .content {
+.xgen-wiki .content {
     border: 1px solid #ddd;
     padding: 5px;
 }
 
-.wiki #rename_popup, .wiki #delete_popup {
+.xgen-wiki #xgen-rename-popup, .wiki #xgen-delete-popup {
     visibility: hidden;
 }
 
-.wiki textarea {
+.xgen-wiki textarea {
     width: 100%;
 }
 
-#wiki .search {
+#xgen-wiki .search {
     float: right;
 	padding: 0 0 1em 1em;
 }
 
-.content p {
+.xgen-content p {
 	margin: 1em 0 0 0;
 	padding: 0;
 }
 
-ul .column-one-third li {
+ul .xgen-column-one-third li {
   background-image: url(/assets/list_bullet_orange.gif);
 }
 
 
 /* Layout */
 
-.column-one-third {
+.xgen-column-one-third {
 	width: 225px;
 	float: left;
 	margin-top: -.5em;
 	padding-right: 10px;
 }
 
-/*
-
-#container {
-	width: 840px;
-	margin: 0 auto;
-}
-
-#nav {
-	width: 690px;
-}
-
-#nav ul {
-	margin: 84px 0 0 125px;
-}
-
-#maincontent {
-	width: 825px;
-}
-
-*/
-
 /* pre with language preference */
 
-.select_controller {
+.xgen-select-controller {
     float:right;
 	background-color:#EFF0E2;
     margin: 0;
@@ -144,43 +123,43 @@ ul .column-one-third li {
 	text-align: right;
 }
 
-.pref_language pre {
+.xgen-pref-language pre {
 	padding-bottom: 0; 
 }
 
-.module-content pre.hide_pre {
+.xgen-module-content pre.xgen-hide-pre {
 	display: none;
 }
 
-.module-content pre.show_pre {
+.xgen-module-content pre.xgen-show-pre {
 	display: block;
 }
 
-.select_controller form {
+.xgen-select-controller form {
     padding: 0;
 }
 
-.module-content {
+.xgen-module-content {
 	clear:both; 
 }
 
 /* wiki files */
 
-#wiki_files {
+#xgen-xgen-wiki-files {
 	margin: -.5em 0 2em 0;
 	padding-top: 0;
 }
 
 /* file upload */
 
-div.file_upload {
+div.xgen-xgen-file-upload {
 	padding: 1em 0 1em 0;
 	clear: both;
 }
 
 /* form */
 
-.submit_button {
+.xgen-xgen-submit-button {
 	border-color:#CCC #999 #999 #CCC;
 	border-style:solid;
 	border-width:1px;
