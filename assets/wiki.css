@@ -34,8 +34,8 @@ pre {
     padding: .5em .5em .5em 1em;
 }
 
-.xgen-xgen-wiki-content ul {
-#    padding-left: 10px;
+#xgen-wiki-content ul {
+    padding-left: 10px;
 }
 
 .xgen-u { font-size:100%; }
@@ -145,21 +145,21 @@ ul .xgen-column-one-third li {
 
 /* wiki files */
 
-#xgen-xgen-wiki-files {
+#xgen-wiki-files {
 	margin: -.5em 0 2em 0;
 	padding-top: 0;
 }
 
 /* file upload */
 
-div.xgen-xgen-file-upload {
+div.xgen-file-upload {
 	padding: 1em 0 1em 0;
 	clear: both;
 }
 
 /* form */
 
-.xgen-xgen-submit-button {
+.xgen-submit-button {
 	border-color:#CCC #999 #999 #CCC;
 	border-style:solid;
 	border-width:1px;

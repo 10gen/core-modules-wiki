@@ -27,5 +27,5 @@
 
 <% htmlheader('10gen Public Wiki | Search'); %>
 
-<div id="wiki">
+<div id="xgen-wiki">
     <h1>Find Wiki Pages</h1>

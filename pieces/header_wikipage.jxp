@@ -40,7 +40,7 @@ if (!Wiki.config.readOnly)
 %>
 <% htmlheader('Wiki | ' + wikiPage.getDisplayName()); %>
 
-<div id="wiki">
+<div id="xgen-wiki">
 
 <% if( !Wiki.config.nosearch ) { %>
     <form class="search float-right" action="search"><input class="text" style="" type="text" id="searchtext" name="text" onfocus="textFocus=true" onblur="textFocus=false" /> <input class="xgen-submit-button" type="submit" value="Search Wiki" /></form>
