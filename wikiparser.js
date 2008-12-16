@@ -251,7 +251,7 @@ content.WikiParser = function(device, resultopts) {
             var curLang = content.WikiParser.curLang();
             var s =
             wikiobj.languageWarning +
-            '<div class="module-content">' +
+            '<div class="xgen-module-content">' +
             '<div class="xgen-select-controller">\n'+
             '<form>\n' +
             '<select class="pref_lang" onChange="changePreferred( this.value, this.selectedIndex, this.length ); ">\n';
